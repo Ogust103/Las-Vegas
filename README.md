@@ -1,65 +1,83 @@
 # Las Vegas — en ligne
 
-Jeu de dés *Las Vegas* multijoueur (2 à 5 joueurs), jouable à distance via un lien partagé.
-Serveur **Node + WebSocket** : la logique de jeu est autoritaire côté serveur et chaque
-joueur ne peut agir que pendant son tour.
+Adaptation web et multijoueur en ligne du jeu de dés **Las Vegas**. De 2 à 5 joueurs
+s'affrontent à distance, chacun sur son appareil, en partageant simplement un lien.
 
-## Structure
+La logique de jeu est **autoritaire côté serveur** (Node + WebSocket) : l'état de la partie
+est synchronisé en temps réel et chaque joueur ne peut agir que pendant son propre tour.
+
+## Fonctionnalités
+
+- 🎲 Parties en ligne de 2 à 5 joueurs via un lien de partage
+- 🏠 Salons rejoignables par code à 4 caractères
+- ⏱️ Synchronisation temps réel (WebSocket) ; les spectateurs suivent la partie en direct
+- 🔒 Tours protégés : impossible de jouer à la place d'un autre joueur
+- 🔁 Reconnexion automatique après un rafraîchissement ou une coupure réseau
+- 📱 Interface responsive (ordinateur, tablette, téléphone)
+
+## Règles du jeu
+
+- 4 manches, 8 dés par joueur.
+- Chaque casino (numéroté de 1 à 6) reçoit des billets jusqu'à atteindre au moins 50 k$.
+- À son tour, un joueur lance tous ses dés restants, puis choisit une valeur : tous les dés
+  de cette valeur sont placés sur le casino correspondant.
+- Au décompte d'une manche, sur chaque casino : les joueurs **à égalité de nombre de dés**
+  sont éliminés du paiement de ce casino. Les autres encaissent les billets — du plus gros
+  au plus petit — par ordre décroissant de nombre de dés.
+- Le joueur le plus riche après 4 manches gagne.
+
+## Comment jouer
+
+1. Un joueur saisit son pseudo et **crée une partie** : un code de salon et un lien de
+   partage sont générés.
+2. Les autres ouvrent le lien (ou saisissent le code), choisissent un pseudo et **rejoignent**.
+3. L'hôte **lance la partie** une fois tout le monde présent (2 à 5 joueurs).
+4. Chacun joue à son tour : **lancer les dés**, puis placer une valeur sur un casino.
+5. Après 4 manches, le classement final s'affiche ; l'hôte peut relancer une partie.
+
+## Stack technique
+
+- **Serveur** : Node.js, Express (fichiers statiques) et `ws` (WebSocket)
+- **Client** : HTML/CSS/JavaScript natif, sans dépendance ni build
 
 ```
 server.js          Serveur HTTP + WebSocket + logique de jeu (salons)
-package.json       Dépendances (express, ws)
+package.json       Dépendances
 public/
   index.html       Écrans : accueil, salon, jeu, résultats
-  client.js        Connexion WebSocket + rendu piloté par l'état serveur
-  styles.css       Styles (responsive mobile inclus)
-render.yaml        Déploiement Render (hébergeur gratuit)
+  client.js        Connexion WebSocket et rendu piloté par l'état serveur
+  styles.css       Styles (responsive inclus)
+render.yaml        Configuration de déploiement (Render)
 ```
 
 ## Lancer en local
+
+Prérequis : Node.js 18 ou supérieur.
 
 ```bash
 npm install
 npm start
 ```
 
-Puis ouvre http://localhost:3000.
-Pour tester à plusieurs sur le même PC : ouvre plusieurs onglets (chaque onglet est un
-joueur distinct car l'identité est stockée par onglet/navigateur). Pour de vrais appareils
-différents sur le même Wi-Fi, utilise l'adresse IP locale de la machine, ex.
-`http://192.168.1.20:3000`.
+L'application est accessible sur http://localhost:3000.
 
-## Déployer gratuitement (Render)
+Pour tester à plusieurs sur une même machine, il suffit d'ouvrir plusieurs onglets. Pour
+jouer entre appareils du même réseau Wi-Fi, utilisez l'adresse IP locale de la machine hôte
+(par exemple `http://192.168.1.20:3000`).
 
-1. Pousse ce dossier sur un dépôt GitHub.
-2. Sur https://render.com → **New** → **Web Service** → connecte le dépôt.
-3. Render détecte `render.yaml` automatiquement (sinon : Build `npm install`,
-   Start `node server.js`, plan *Free*).
-4. À la fin du déploiement tu obtiens une URL publique du type
-   `https://las-vegas-online.onrender.com`.
+## Déploiement
 
-> Note offre gratuite Render : le service s'endort après ~15 min d'inactivité.
-> Le premier accès après une pause prend quelques secondes à se réveiller.
+Le projet fonctionne sur n'importe quel hébergeur Node. La commande de démarrage est
+`node server.js` et le port est lu depuis `process.env.PORT`.
 
-D'autres hébergeurs gratuits fonctionnent aussi (Railway, Fly.io) : il suffit que la
-commande de démarrage soit `node server.js` et que le port soit lu via `process.env.PORT`
-(déjà géré).
+Un fichier `render.yaml` est fourni pour un déploiement en un clic sur
+[Render](https://render.com) : créer un **Web Service** à partir du dépôt, le reste est
+détecté automatiquement (plan gratuit disponible). Railway et Fly.io conviennent également.
 
-## Comment jouer
+> ℹ️ Sur les offres gratuites, le serveur peut se mettre en veille après une période
+> d'inactivité ; le premier accès suivant prend alors quelques secondes.
 
-1. **Hôte** : saisis ton pseudo → **Créer une partie**. Un code de salon (4 lettres) et un
-   lien de partage apparaissent.
-2. **Invités** : ouvrent le lien (ou saisissent le code), entrent leur pseudo → **Rejoindre**.
-3. L'hôte clique sur **Lancer la partie** quand tout le monde est là (2 à 5 joueurs).
-4. À ton tour : **Lancer les dés**, puis place tous les dés d'une même valeur sur le casino
-   correspondant. Les autres voient la partie en direct.
-5. Après 4 manches, classement final. L'hôte peut **Rejouer** avec les mêmes joueurs.
+## Licence
 
-## Règles (version implémentée)
-
-- 4 manches, 8 dés par joueur.
-- Chaque casino (1 à 6) reçoit des billets jusqu'à atteindre au moins 50 k$.
-- Au décompte d'une manche : sur chaque casino, les joueurs **à égalité de nombre de dés**
-  sont éliminés du paiement de ce casino ; les autres encaissent les billets, du plus gros
-  au plus petit, par ordre décroissant de dés.
-- Reconnexion automatique : un refresh ou une coupure réseau te ramène dans ta partie.
+Projet personnel à but non commercial. *Las Vegas* est une création de Rüdiger Dorn,
+éditée par Ravensburger / alea ; ce dépôt en est une adaptation amateur non officielle.
