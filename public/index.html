@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Las Vegas</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h1>Las Vegas</h1>
+<div class="subtitle">misez gros, comptez vos dés</div>
+
+<div id="conn-status" class="conn-status" style="display:none"></div>
+
+<!-- ACCUEIL : créer / rejoindre -->
+<div id="home-screen">
+  <div class="card">
+    <label for="homeName">Ton pseudo</label>
+    <input type="text" id="homeName" maxlength="20" placeholder="Ton nom de joueur">
+
+    <button class="start-btn" id="createBtn">Créer une partie</button>
+
+    <div class="or-sep">— ou rejoindre —</div>
+
+    <label for="joinCode">Code du salon</label>
+    <div class="join-row">
+      <input type="text" id="joinCode" maxlength="4" placeholder="ABCD" autocomplete="off">
+      <button class="secondary" id="joinBtn">Rejoindre</button>
+    </div>
+  </div>
+</div>
+
+<!-- SALON D'ATTENTE -->
+<div id="lobby-screen" style="display:none">
+  <div class="card">
+    <div class="lobby-code-label">Code du salon</div>
+    <div class="lobby-code" id="lobbyCode">----</div>
+
+    <div class="share-row">
+      <input type="text" id="shareLink" readonly>
+      <button class="secondary" id="copyBtn">Copier le lien</button>
+    </div>
+
+    <div class="lobby-players-title">Joueurs</div>
+    <div id="lobbyPlayers" class="lobby-players"></div>
+
+    <button class="start-btn" id="startGameBtn">Lancer la partie</button>
+    <div id="lobbyHint" class="lobby-hint"></div>
+  </div>
+</div>
+
+<!-- JEU -->
+<div id="game-screen" style="display:none">
+  <aside class="sidebar">
+    <div class="round-badge" id="roundBadge">Manche 1 / 4</div>
+    <div class="scoreboard" id="scoreboard"></div>
+  </aside>
+
+  <div class="main-area">
+    <div class="board" id="board"></div>
+
+    <div class="controls">
+      <div class="turn-banner" id="turnBanner"></div>
+      <div class="hand" id="hand"></div>
+      <div>
+        <button id="rollBtn">🎲 Lancer les dés</button>
+      </div>
+      <div class="choices" id="choices"></div>
+    </div>
+
+    <div class="log" id="log"></div>
+  </div>
+</div>
+
+<!-- RÉSULTATS -->
+<div class="final-screen" id="final-screen" style="display:none">
+  <h1 style="font-size:1.8em;">Résultats finaux</h1>
+  <div id="finalRanks"></div>
+  <button id="restartBtn" style="margin-top:16px;">Rejouer</button>
+  <div id="finalHint" class="lobby-hint"></div>
+</div>
+
+<script src="client.js"></script>
+
+</body>
+</html>
