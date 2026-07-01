@@ -1,0 +1,32 @@
+<!-- Las Vegas — fragment de l'écran de jeu, injecté dans #game-screen -->
+<aside class="sidebar">
+  <div class="round-badge" id="roundBadge">Manche 1 / 4</div>
+  <div class="scoreboard" id="scoreboard"></div>
+</aside>
+
+<div class="main-area">
+  <div class="board" id="board"></div>
+
+  <div class="terminal-dock">
+    <div class="vsc-term-head" aria-hidden="true">
+      <span class="tt">Problèmes</span>
+      <span class="tt">Sortie</span>
+      <span class="tt">Console de débogage</span>
+      <span class="tt active">Terminal</span>
+      <span class="vsc-term-tools">+ ⌄ ⤢ ✕</span>
+    </div>
+
+    <div class="controls">
+      <div class="vsc-term-body">
+        <div class="turn-banner" id="turnBanner"></div>
+        <div class="hand" id="hand"></div>
+        <div>
+          <button id="rollBtn">🎲 Lancer les dés</button>
+        </div>
+        <div class="choices" id="choices"></div>
+      </div>
+    </div>
+
+    <div class="log" id="log"></div>
+  </div>
+</div>

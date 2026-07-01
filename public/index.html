@@ -10,16 +10,19 @@
 </head>
 <body>
 
+<button id="toMenuBtn" class="to-menu" title="Menu">☰ Menu</button>
 <button id="themeToggle" class="theme-toggle" title="Changer de thème"></button>
+<div id="headerMenu" class="header-menu" style="display:none"></div>
 
 <!-- Habillage décoratif "VS Code" (visible uniquement dans le thème vscode) -->
 <div class="vscode-chrome" aria-hidden="true">
   <div class="vsc-titlebar">
     <div class="vsc-traffic"><span class="t-r"></span><span class="t-y"></span><span class="t-g"></span></div>
     <div class="vsc-menu">
+      <span id="vscMenuHome" title="Retour au menu">Menu</span>
       <span>Fichier</span><span>Édition</span><span>Sélection</span><span>Affichage</span><span>Atteindre</span><span>Exécuter</span><span>Aide</span>
     </div>
-    <div class="vsc-title">game.js — Visual Studio Code</div>
+    <div class="vsc-title" id="vscTitle">Parties en ligne — Visual Studio Code</div>
   </div>
 
   <div class="vsc-activity">
@@ -34,23 +37,10 @@
 
   <div class="vsc-sidebar">
     <div class="vsc-sb-title">Explorateur</div>
-    <div class="vsc-tree">
-      <div class="vsc-row vsc-folder open">▾ PROJET</div>
-      <div class="vsc-row vsc-folder closed" style="padding-left:24px">▸ node_modules</div>
-      <div class="vsc-row vsc-folder open" style="padding-left:24px">▾ public</div>
-      <div class="vsc-row vsc-file active" style="padding-left:40px"><span class="fi js">JS</span>game.js</div>
-      <div class="vsc-row vsc-file" style="padding-left:40px"><span class="fi css">#</span>styles.css</div>
-      <div class="vsc-row vsc-file" style="padding-left:40px"><span class="fi html">&lt;&gt;</span>index.html</div>
-      <div class="vsc-row vsc-file" style="padding-left:24px"><span class="fi js">JS</span>server.js</div>
-      <div class="vsc-row vsc-file" style="padding-left:24px"><span class="fi json">{}</span>package.json</div>
-      <div class="vsc-row vsc-file" style="padding-left:24px"><span class="fi md">M↓</span>README.md</div>
-    </div>
+    <div class="vsc-tree" id="vscTree"></div>
   </div>
 
-  <div class="vsc-tabs">
-    <div class="vsc-tab active"><span class="fi js">JS</span>game.js<span class="vsc-close">×</span></div>
-    <div class="vsc-tab"><span class="fi css">#</span>styles.css<span class="vsc-close">×</span></div>
-  </div>
+  <div class="vsc-tabs" id="vscTabs"></div>
 
   <div class="vsc-statusbar">
     <div class="vsc-sb-left">
@@ -68,9 +58,22 @@
 
 <div id="conn-status" class="conn-status" style="display:none"></div>
 
+<!-- MENU : choix du jeu -->
+<div id="menu-screen">
+  <div class="menu-head">Choisis un jeu</div>
+  <div id="gameList" class="game-list"></div>
+
+  <div id="menuRooms" class="menu-rooms" style="display:none">
+    <div class="menu-head sub">Tes parties en cours</div>
+    <div id="roomList" class="game-list"></div>
+  </div>
+</div>
+
 <!-- ACCUEIL : créer / rejoindre -->
-<div id="home-screen">
+<div id="home-screen" style="display:none">
   <div class="card">
+    <div class="home-game-title" id="homeGameTitle"></div>
+
     <label for="homeName">Ton pseudo</label>
     <input type="text" id="homeName" maxlength="20" placeholder="Ton nom de joueur">
 
@@ -83,6 +86,8 @@
       <input type="text" id="joinCode" maxlength="4" placeholder="ABCD" autocomplete="off">
       <button class="secondary" id="joinBtn">Rejoindre</button>
     </div>
+
+    <button class="linklike" id="backToMenu">← Choisir un autre jeu</button>
   </div>
 </div>
 
@@ -105,50 +110,19 @@
   </div>
 </div>
 
-<!-- JEU -->
-<div id="game-screen" style="display:none">
-  <aside class="sidebar">
-    <div class="round-badge" id="roundBadge">Manche 1 / 4</div>
-    <div class="scoreboard" id="scoreboard"></div>
-  </aside>
-
-  <div class="main-area">
-    <div class="board" id="board"></div>
-
-    <div class="terminal-dock">
-      <div class="vsc-term-head" aria-hidden="true">
-        <span class="tt">Problèmes</span>
-        <span class="tt">Sortie</span>
-        <span class="tt">Console de débogage</span>
-        <span class="tt active">Terminal</span>
-        <span class="vsc-term-tools">+ ⌄ ⤢ ✕</span>
-      </div>
-
-      <div class="controls">
-        <div class="vsc-term-body">
-          <div class="turn-banner" id="turnBanner"></div>
-          <div class="hand" id="hand"></div>
-          <div>
-            <button id="rollBtn">🎲 Lancer les dés</button>
-          </div>
-          <div class="choices" id="choices"></div>
-        </div>
-      </div>
-
-      <div class="log" id="log"></div>
-    </div>
-  </div>
-</div>
+<!-- JEU : conteneur rempli dynamiquement par le module du jeu (games/<id>/view.html) -->
+<div id="game-screen" style="display:none"></div>
 
 <!-- RÉSULTATS -->
 <div class="final-screen" id="final-screen" style="display:none">
   <h1 style="font-size:1.8em;">Résultats finaux</h1>
+  <div id="finalNote" class="final-note" style="display:none"></div>
   <div id="finalRanks"></div>
   <button id="restartBtn" style="margin-top:16px;">Rejouer</button>
   <div id="finalHint" class="lobby-hint"></div>
 </div>
 
-<script src="client.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
