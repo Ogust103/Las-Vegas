@@ -149,6 +149,8 @@ button.secondary{
   border-color:rgba(255,255,255,.5);
   box-shadow:0 0 4px var(--pc);
 }
+/* phrase de chat : masquée hors thème VS Code */
+.score-msg{display:none;}
 
 .board{
   max-width:1100px;margin:0 auto 20px;
@@ -185,6 +187,16 @@ button.secondary{
   text-align:center;
 }
 .bill.taken{opacity:.15;text-decoration:line-through;}
+/* thème casino : une couleur par valeur de billet */
+.bill.b10{background:#607d8b;color:#fff;border-color:#eceff1;}
+.bill.b20{background:#00897b;color:#fff;border-color:#b2dfdb;}
+.bill.b30{background:#1e88e5;color:#fff;border-color:#bbdefb;}
+.bill.b40{background:#8e24aa;color:#fff;border-color:#e1bee7;}
+.bill.b50{background:#e53935;color:#fff;border-color:#ffcdd2;}
+.bill.b60{background:#fb8c00;color:#4a2c00;border-color:#ffe0b2;}
+.bill.b70{background:#43a047;color:#fff;border-color:#c8e6c9;}
+.bill.b80{background:#fdd835;color:#5a4a00;border-color:#fff59d;}
+.bill.b90{background:#3949ab;color:#fff;border-color:#c5cae9;}
 .dice-on-casino{
   display:flex;flex-wrap:wrap;gap:3px;justify-content:center;width:100%;
 }
@@ -204,14 +216,27 @@ button.secondary{
   text-align:center;
 }
 .hand{
-  display:flex;justify-content:center;gap:8px;margin:14px 0;flex-wrap:wrap;
+  display:flex;justify-content:center;gap:22px;margin:14px 0;flex-wrap:wrap;
   min-height:56px;
 }
+/* les dés d'une même valeur restent serrés ; les groupes sont bien séparés */
+.die-group{display:flex;gap:6px;}
+/* groupe cliquable : on peut cliquer un dé pour le placer */
+.die-group.clickable{cursor:pointer;border-radius:10px;transition:transform .08s;}
+.die-group.clickable:hover{transform:translateY(-4px);}
+.die-group.clickable:hover .die{box-shadow:0 6px 10px rgba(0,0,0,.5), 0 0 0 2px var(--gold-bright);}
 .hand .die{
   width:46px;height:46px;font-size:1.4em;border-radius:8px;
   background:var(--cream);color:var(--ink);border:2px solid var(--gold);
   box-shadow:0 3px 0 rgba(0,0,0,.4);
 }
+/* thème casino : une couleur par valeur de dé */
+.hand .die.v1{background:#e74c3c;color:#fff;border-color:#c0392b;}
+.hand .die.v2{background:#e67e22;color:#fff;border-color:#d35400;}
+.hand .die.v3{background:#f1c40f;color:#5a4a00;border-color:#d4ac0d;}
+.hand .die.v4{background:#27ae60;color:#fff;border-color:#1e8449;}
+.hand .die.v5{background:#2980b9;color:#fff;border-color:#1f618d;}
+.hand .die.v6{background:#8e44ad;color:#fff;border-color:#6c3483;}
 .choices{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px;}
 .choice-btn{min-width:70px;}
 .log{
@@ -336,3 +361,9 @@ button.secondary{
   text-align:center;color:rgba(244,236,216,.7);font-size:.85em;margin-top:12px;
 }
 .score-row.offline{opacity:.55;}
+
+/* ============ Bouton de bascule de thème ============ */
+.theme-toggle{
+  position:fixed;top:12px;right:12px;z-index:100;
+  font-size:.8em;padding:7px 12px;
+}

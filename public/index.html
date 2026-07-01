@@ -3,13 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Las Vegas</title>
+<title>game.js</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="theme-vscode.css">
+<script>try{var t=localStorage.getItem('lv_theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 </head>
 <body>
 
-<h1>Las Vegas</h1>
-<div class="subtitle">misez gros, comptez vos dés</div>
+<button id="themeToggle" class="theme-toggle" title="Changer de thème"></button>
+
+<!-- Habillage décoratif "VS Code" (visible uniquement dans le thème vscode) -->
+<div class="vscode-chrome" aria-hidden="true">
+  <div class="vsc-titlebar">
+    <div class="vsc-traffic"><span class="t-r"></span><span class="t-y"></span><span class="t-g"></span></div>
+    <div class="vsc-menu">
+      <span>Fichier</span><span>Édition</span><span>Sélection</span><span>Affichage</span><span>Atteindre</span><span>Exécuter</span><span>Aide</span>
+    </div>
+    <div class="vsc-title">game.js — Visual Studio Code</div>
+  </div>
+
+  <div class="vsc-activity">
+    <span class="vsc-ico active" title="Explorateur">▤</span>
+    <span class="vsc-ico" title="Rechercher">⌕</span>
+    <span class="vsc-ico" title="Contrôle de code source">⑂</span>
+    <span class="vsc-ico" title="Exécuter et déboguer">▷</span>
+    <span class="vsc-ico" title="Extensions">▦</span>
+    <span class="vsc-ico vsc-ico-bottom" title="Comptes">＠</span>
+    <span class="vsc-ico" title="Paramètres">⚙</span>
+  </div>
+
+  <div class="vsc-sidebar">
+    <div class="vsc-sb-title">Explorateur</div>
+    <div class="vsc-tree">
+      <div class="vsc-row vsc-folder open">▾ PROJET</div>
+      <div class="vsc-row vsc-folder closed" style="padding-left:24px">▸ node_modules</div>
+      <div class="vsc-row vsc-folder open" style="padding-left:24px">▾ public</div>
+      <div class="vsc-row vsc-file active" style="padding-left:40px"><span class="fi js">JS</span>game.js</div>
+      <div class="vsc-row vsc-file" style="padding-left:40px"><span class="fi css">#</span>styles.css</div>
+      <div class="vsc-row vsc-file" style="padding-left:40px"><span class="fi html">&lt;&gt;</span>index.html</div>
+      <div class="vsc-row vsc-file" style="padding-left:24px"><span class="fi js">JS</span>server.js</div>
+      <div class="vsc-row vsc-file" style="padding-left:24px"><span class="fi json">{}</span>package.json</div>
+      <div class="vsc-row vsc-file" style="padding-left:24px"><span class="fi md">M↓</span>README.md</div>
+    </div>
+  </div>
+
+  <div class="vsc-tabs">
+    <div class="vsc-tab active"><span class="fi js">JS</span>game.js<span class="vsc-close">×</span></div>
+    <div class="vsc-tab"><span class="fi css">#</span>styles.css<span class="vsc-close">×</span></div>
+  </div>
+
+  <div class="vsc-statusbar">
+    <div class="vsc-sb-left">
+      <span class="vsc-si accent">⑂ main</span>
+      <span class="vsc-si">⊘ 0&nbsp;&nbsp;⚠ 0</span>
+    </div>
+    <div class="vsc-sb-right">
+      <span class="vsc-si">Ln 1, Col 1</span>
+      <span class="vsc-si">Espaces : 2</span>
+      <span class="vsc-si">UTF-8</span>
+      <span class="vsc-si">JavaScript</span>
+    </div>
+  </div>
+</div>
 
 <div id="conn-status" class="conn-status" style="display:none"></div>
 
@@ -60,16 +115,28 @@
   <div class="main-area">
     <div class="board" id="board"></div>
 
-    <div class="controls">
-      <div class="turn-banner" id="turnBanner"></div>
-      <div class="hand" id="hand"></div>
-      <div>
-        <button id="rollBtn">🎲 Lancer les dés</button>
+    <div class="terminal-dock">
+      <div class="vsc-term-head" aria-hidden="true">
+        <span class="tt">Problèmes</span>
+        <span class="tt">Sortie</span>
+        <span class="tt">Console de débogage</span>
+        <span class="tt active">Terminal</span>
+        <span class="vsc-term-tools">+ ⌄ ⤢ ✕</span>
       </div>
-      <div class="choices" id="choices"></div>
-    </div>
 
-    <div class="log" id="log"></div>
+      <div class="controls">
+        <div class="vsc-term-body">
+          <div class="turn-banner" id="turnBanner"></div>
+          <div class="hand" id="hand"></div>
+          <div>
+            <button id="rollBtn">🎲 Lancer les dés</button>
+          </div>
+          <div class="choices" id="choices"></div>
+        </div>
+      </div>
+
+      <div class="log" id="log"></div>
+    </div>
   </div>
 </div>
 

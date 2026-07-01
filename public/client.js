@@ -180,6 +180,10 @@ function renderScoreboard() {
     const pips = Array.from({ length: state.dicePerPlayer }, (_, d) =>
       '<span class="pip' + (d < p.diceLeft ? ' filled' : '') + '"></span>'
     ).join('');
+    const dice = p.diceLeft;
+    const diceWord = dice > 1 ? 'dés' : 'dé';
+    // contenu court façon message de chat (affiché en thème VS Code)
+    const msg = p.money + ' k$  ·  ' + dice + ' ' + diceWord;
     return '<div class="score-row' + (isActive ? ' active' : '') + (p.connected ? '' : ' offline') + '" style="--pc:' + p.color + '">' +
       '<div class="score-main">' +
         '<span class="score-name">' +
@@ -192,6 +196,7 @@ function renderScoreboard() {
         '<span class="score-money">' + p.money + ' <small>k$</small></span>' +
       '</div>' +
       '<div class="score-dice" title="' + p.diceLeft + ' dés restants">' + pips + '</div>' +
+      '<div class="score-msg">' + msg + '</div>' +
     '</div>';
   }).join('');
 }
@@ -212,7 +217,7 @@ function renderBoard() {
     billsDiv.className = 'bills';
     (state.casinoBills[c] || []).forEach(b => {
       const bd = document.createElement('div');
-      bd.className = 'bill' + (b.takenBy !== null ? ' taken' : '');
+      bd.className = 'bill b' + b.value + (b.takenBy !== null ? ' taken' : '');
       bd.textContent = b.value + ' k$';
       billsDiv.appendChild(bd);
     });
@@ -243,19 +248,30 @@ function renderControls() {
 
   // Bannière
   if (state.resolving) {
-    banner.innerHTML = 'Décompte de la manche ' + state.round + '…';
+    banner.innerHTML = 'Décompte…';
   } else if (myTurn) {
-    banner.innerHTML = '<span style="color:' + playerColor(clientId) + '">●</span> À toi de jouer ! — dés restants : ' + (current ? current.diceLeft : 0);
+    banner.innerHTML = '<span style="color:' + playerColor(clientId) + '">●</span> Toi — ' + (current ? current.diceLeft : 0) + ' dés';
   } else if (current) {
-    banner.innerHTML = '<span style="color:' + current.color + '">●</span> Au tour de <b>' + escapeHtml(current.name) + '</b> — dés restants : ' + current.diceLeft;
+    banner.innerHTML = '<span style="color:' + current.color + '">●</span> <b>' + escapeHtml(current.name) + '</b> — ' + current.diceLeft + ' dés';
   } else {
     banner.textContent = '';
   }
 
-  // Main (dés lancés) — visible par tout le monde
+  // Main (dés lancés) — visible par tout le monde, groupés par valeur
   if (state.hand && state.hand.length) {
-    handEl.innerHTML = state.hand.slice().sort((a, b) => a - b)
-      .map(v => '<div class="die">' + v + '</div>').join('');
+    const canPlace = myTurn && !state.resolving;
+    const groups = {};
+    state.hand.forEach(v => { (groups[v] = groups[v] || []).push(v); });
+    handEl.innerHTML = Object.keys(groups).sort((a, b) => a - b).map(vStr => {
+      const v = parseInt(vStr, 10);
+      const n = groups[v].length;
+      const attrs = canPlace
+        ? ' class="die-group clickable" data-v="' + v + '" title="Placer ' + n + '×' + v + ' sur le casino ' + v + '"'
+        : ' class="die-group"';
+      return '<div' + attrs + '>' +
+        groups[v].map(() => '<div class="die v' + v + '">' + v + '</div>').join('') +
+        '</div>';
+    }).join('');
   } else {
     handEl.innerHTML = '';
   }
@@ -310,6 +326,14 @@ function renderFinal() {
 $('createBtn').addEventListener('click', createGame);
 $('joinBtn').addEventListener('click', () => joinGame());
 $('rollBtn').addEventListener('click', () => send({ type: 'roll', clientId }));
+// clic sur un dé (ou son groupe) pour placer tous les dés de cette valeur
+$('hand').addEventListener('click', (e) => {
+  const group = e.target.closest('.die-group');
+  if (!group || !group.classList.contains('clickable')) return;
+  if (!state || state.currentPlayerId !== clientId || state.resolving || !state.hand) return;
+  const v = parseInt(group.dataset.v, 10);
+  if (v >= 1 && v <= 6) send({ type: 'place', value: v, clientId });
+});
 $('startGameBtn').addEventListener('click', () => send({ type: 'start', clientId }));
 $('restartBtn').addEventListener('click', () => send({ type: 'restart', clientId }));
 $('copyBtn').addEventListener('click', () => {
@@ -323,6 +347,21 @@ $('copyBtn').addEventListener('click', () => {
 $('joinCode').addEventListener('input', (e) => {
   e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
 });
+
+// ---------- Thème (casino / VS Code) ----------
+function currentTheme() {
+  return document.documentElement.getAttribute('data-theme') || 'casino';
+}
+function applyTheme(theme) {
+  if (theme === 'vscode') document.documentElement.setAttribute('data-theme', 'vscode');
+  else document.documentElement.removeAttribute('data-theme');
+  try { localStorage.setItem('lv_theme', theme); } catch (e) { /* ignore */ }
+  $('themeToggle').textContent = theme === 'vscode' ? '🎲 Casino' : '🖥️ VS Code';
+}
+$('themeToggle').addEventListener('click', () => {
+  applyTheme(currentTheme() === 'vscode' ? 'casino' : 'vscode');
+});
+applyTheme(currentTheme());
 
 // ---------- Démarrage : pré-remplissage ----------
 (function init() {

@@ -22,7 +22,7 @@ const wss = new WebSocketServer({ server });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log('Las Vegas en ligne — serveur démarré sur le port ' + PORT);
+  console.log('Serveur démarré sur le port ' + PORT);
 });
 
 // ---------- État global : les salons ----------
@@ -196,7 +196,7 @@ function startRound(room) {
   room.turnPointer = 0;
   room.hand = null;
   room.handOwnerId = null;
-  addLog(room, '— Manche ' + room.round + ' : les casinos sont garnis —');
+  addLog(room, '— Manche ' + room.round + ' —');
   advanceToNextActivePlayer(room, true);
 }
 

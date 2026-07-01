@@ -1,0 +1,496 @@
+/* ==========================================================================
+   Thème "VS Code" — habillage éditeur, terminal, chat IA, casinos-en-code.
+   Chargé après styles.css ; tout est scopé sous [data-theme="vscode"]
+   (ou sous .vscode-chrome, masqué par défaut). Activé via le bouton de thème.
+   ========================================================================== */
+
+/* ============ THÈME VS CODE ============ */
+:root[data-theme="vscode"]{
+  --felt:#1e1e1e;
+  --felt-dark:#252526;
+  --gold:#007acc;
+  --gold-bright:#569cd6;
+  --cream:#d4d4d4;
+  --red:#c586c0;
+  --ink:#1e1e1e;
+}
+[data-theme="vscode"] body{
+  background:#1e1e1e;
+  font-family:'Segoe UI','Helvetica Neue',system-ui,sans-serif;
+}
+[data-theme="vscode"] h1{
+  color:#569cd6;
+  text-shadow:none;
+  letter-spacing:1px;
+  font-family:'Consolas','SFMono-Regular','Menlo',monospace;
+}
+[data-theme="vscode"] .subtitle{
+  color:#6a9955; /* vert "commentaire" */
+  text-transform:none;letter-spacing:0;font-style:italic;
+}
+[data-theme="vscode"] .subtitle::before{content:"// ";}
+
+/* Panneaux : surfaces plates type éditeur */
+[data-theme="vscode"] .card,
+[data-theme="vscode"] .controls,
+[data-theme="vscode"] .scoreboard,
+[data-theme="vscode"] .log,
+[data-theme="vscode"] .casino,
+[data-theme="vscode"] .rank,
+[data-theme="vscode"] .lobby-player,
+[data-theme="vscode"] .score-row{
+  background:#252526;
+  border-color:#3c3c3c;
+  border-radius:4px;
+  box-shadow:none;
+}
+[data-theme="vscode"] .score-row{background:#2d2d2d;}
+[data-theme="vscode"] .casino{border:1px solid #3c3c3c;}
+
+/* Champs de saisie */
+[data-theme="vscode"] select,
+[data-theme="vscode"] input[type=text]{
+  background:#3c3c3c;color:#d4d4d4;border:1px solid #3c3c3c;border-radius:2px;
+}
+[data-theme="vscode"] select:focus,
+[data-theme="vscode"] input[type=text]:focus{
+  outline:1px solid #007acc;border-color:#007acc;
+}
+
+/* Boutons : style "VS Code" plat */
+[data-theme="vscode"] button{
+  background:#0e639c;color:#fff;
+  border-radius:2px;font-weight:normal;
+  box-shadow:none;
+  background-image:none;
+}
+[data-theme="vscode"] button:hover:not(:disabled){background:#1177bb;}
+[data-theme="vscode"] button:active{transform:none;box-shadow:none;}
+[data-theme="vscode"] button.secondary{
+  background:#3a3d41;color:#d4d4d4;border:1px solid #45494e;box-shadow:none;
+}
+[data-theme="vscode"] button.secondary:hover:not(:disabled){background:#45494e;}
+[data-theme="vscode"] button:disabled{background:#2d2d2d;color:#6b6b6b;}
+
+/* Badge de manche : façon barre d'état */
+[data-theme="vscode"] .round-badge{
+  background:#007acc;color:#fff;border:none;border-radius:2px;
+}
+
+/* Casinos : numéros et billets monospace */
+[data-theme="vscode"] .casino .num{
+  background:#1e1e1e;border:1px solid #3c3c3c;color:#569cd6;
+  font-family:'Consolas','Menlo',monospace;
+}
+[data-theme="vscode"] .bill{
+  background:#2d2d2d;border:1px solid #3c3c3c;color:#b5cea8; /* vert "nombre" */
+  border-radius:2px;font-family:'Consolas','Menlo',monospace;
+}
+[data-theme="vscode"] .bill.taken{opacity:.25;}
+
+/* Dés en main */
+[data-theme="vscode"] .hand .die{
+  background:#1e1e1e;color:#d4d4d4;border:1px solid #3c3c3c;
+  border-radius:3px;box-shadow:none;font-family:'Consolas','Menlo',monospace;
+}
+
+/* Scoreboard */
+[data-theme="vscode"] .score-money{color:#b5cea8;font-family:'Consolas','Menlo',monospace;}
+[data-theme="vscode"] .turn-banner{color:#569cd6;}
+
+/* Lobby */
+[data-theme="vscode"] .lobby-code{
+  color:#569cd6;text-shadow:none;font-family:'Consolas','Menlo',monospace;
+}
+[data-theme="vscode"] .rank.win{border-color:#007acc;box-shadow:none;}
+[data-theme="vscode"] .conn-status{border-color:#007acc;color:#569cd6;background:#252526;}
+[data-theme="vscode"] .conn-status.error{border-color:#f14c4c;color:#f14c4c;background:#3a1d1d;}
+
+/* ====== Habillage "fenêtre VS Code" ====== */
+:root{
+  --vsc-titlebar-h:34px;
+  --vsc-tabs-h:35px;
+  --vsc-activity-w:48px;
+  --vsc-sidebar-w:220px;
+  --vsc-status-h:24px;
+  --vsc-term-h:380px;
+  --vsc-chat-w:300px;
+}
+.vscode-chrome{display:none;}
+[data-theme="vscode"] .vscode-chrome{
+  display:block;
+  font-family:'Segoe UI','Helvetica Neue',system-ui,sans-serif;
+}
+/* On pousse le contenu du jeu dans la "zone éditeur" */
+[data-theme="vscode"] body{
+  padding:calc(var(--vsc-titlebar-h) + var(--vsc-tabs-h) + 14px)
+          18px
+          calc(var(--vsc-status-h) + var(--vsc-term-h) + 16px)
+          calc(var(--vsc-activity-w) + var(--vsc-sidebar-w) + 18px);
+}
+[data-theme="vscode"] .theme-toggle{
+  top:5px;right:10px;z-index:70;
+  font-size:.72em;padding:4px 9px;
+  background:#3c3c3c;color:#d4d4d4;border:1px solid #565656;
+}
+[data-theme="vscode"] .theme-toggle:hover{background:#4a4a4a;}
+
+/* Barre de titre */
+.vsc-titlebar{
+  position:fixed;top:0;left:0;right:0;height:var(--vsc-titlebar-h);z-index:60;
+  background:#3c3c3c;color:#cccccc;display:flex;align-items:center;gap:18px;
+  padding:0 12px;font-size:13px;border-bottom:1px solid #2d2d2d;
+}
+.vsc-traffic{display:flex;gap:8px;}
+.vsc-traffic span{width:12px;height:12px;border-radius:50%;display:block;}
+.vsc-traffic .t-r{background:#ff5f56;}
+.vsc-traffic .t-y{background:#ffbd2e;}
+.vsc-traffic .t-g{background:#27c93f;}
+.vsc-menu{display:flex;gap:14px;color:#cccccc;}
+.vsc-menu span{cursor:default;}
+.vsc-menu span:hover{color:#fff;}
+.vsc-title{
+  position:absolute;left:50%;transform:translateX(-50%);
+  color:#9d9d9d;font-size:12px;white-space:nowrap;
+}
+
+/* Barre d'activité (icônes à gauche) */
+.vsc-activity{
+  position:fixed;left:0;top:var(--vsc-titlebar-h);
+  bottom:var(--vsc-status-h);width:var(--vsc-activity-w);z-index:55;
+  background:#333333;display:flex;flex-direction:column;align-items:center;
+  padding-top:6px;gap:4px;
+}
+.vsc-ico{
+  width:100%;height:42px;display:flex;align-items:center;justify-content:center;
+  color:#858585;font-size:22px;cursor:default;border-left:2px solid transparent;
+}
+.vsc-ico:hover{color:#fff;}
+.vsc-ico.active{color:#fff;border-left-color:#fff;}
+.vsc-ico-bottom{margin-top:auto;}
+
+/* Explorateur */
+.vsc-sidebar{
+  position:fixed;left:var(--vsc-activity-w);top:var(--vsc-titlebar-h);
+  bottom:var(--vsc-status-h);width:var(--vsc-sidebar-w);z-index:54;
+  background:#252526;border-right:1px solid #1e1e1e;overflow:auto;
+  font-size:13px;color:#cccccc;
+}
+.vsc-sb-title{
+  text-transform:uppercase;font-size:11px;letter-spacing:.5px;color:#bbbbbb;
+  padding:10px 14px 6px;
+}
+.vsc-row{padding:3px 8px 3px 12px;white-space:nowrap;cursor:default;display:flex;align-items:center;gap:6px;}
+.vsc-row:hover{background:#2a2d2e;}
+.vsc-folder{color:#cccccc;text-transform:uppercase;font-size:11px;letter-spacing:.4px;}
+.vsc-row.vsc-folder.open:first-child{font-weight:bold;}
+.vsc-file{color:#cccccc;font-size:13px;text-transform:none;letter-spacing:0;}
+.vsc-file.active{background:#37373d;}
+.fi{
+  font-size:10px;font-weight:bold;width:18px;text-align:center;flex:none;
+  font-family:'Consolas','Menlo',monospace;
+}
+.fi.js{color:#e9d585;}
+.fi.css{color:#569cd6;}
+.fi.html{color:#e37933;}
+.fi.json{color:#cbcb41;}
+.fi.md{color:#519aba;}
+
+/* Onglets */
+.vsc-tabs{
+  position:fixed;top:var(--vsc-titlebar-h);
+  left:calc(var(--vsc-activity-w) + var(--vsc-sidebar-w));right:0;
+  height:var(--vsc-tabs-h);z-index:53;
+  background:#252526;display:flex;align-items:stretch;
+  border-bottom:1px solid #1e1e1e;
+}
+.vsc-tab{
+  display:flex;align-items:center;gap:7px;
+  padding:0 14px;font-size:13px;color:#969696;
+  background:#2d2d2d;border-right:1px solid #1e1e1e;cursor:default;
+}
+.vsc-tab.active{background:#1e1e1e;color:#fff;border-top:1px solid #007acc;}
+.vsc-close{opacity:.6;margin-left:4px;}
+
+/* Barre d'état */
+.vsc-statusbar{
+  position:fixed;left:0;right:0;bottom:0;height:var(--vsc-status-h);z-index:60;
+  background:#007acc;color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:0 6px;font-size:12px;
+}
+.vsc-sb-left,.vsc-sb-right{display:flex;align-items:center;}
+.vsc-si{padding:0 8px;display:flex;align-items:center;height:var(--vsc-status-h);}
+.vsc-si.accent{background:rgba(255,255,255,.12);}
+
+/* ====== VS Code : casinos rendus comme des lignes de code ====== */
+[data-theme="vscode"] .board{
+  display:block;grid-template-columns:none;
+  background:#1e1e1e;border:1px solid #3c3c3c;border-radius:4px;
+  margin:0 0 16px;max-width:none;padding:10px 0;
+  counter-reset:line;
+  font-family:'Consolas','SFMono-Regular','Menlo',monospace;
+  font-size:14px;line-height:1.7;
+  text-align:left;
+}
+/* tout le contenu "éditeur" aligné sur la marge gauche */
+[data-theme="vscode"] #game-screen{max-width:none;margin:0;gap:0;}
+[data-theme="vscode"] .controls,
+[data-theme="vscode"] .log{margin-left:0;margin-right:0;max-width:none;}
+[data-theme="vscode"] .casino{
+  display:flex;flex-direction:row;justify-content:flex-start;
+  align-items:center;flex-wrap:wrap;gap:7px;
+  min-height:0;background:none;border:none;border-radius:0;padding:1px 14px;
+}
+[data-theme="vscode"] .casino:hover{background:#262626;}
+[data-theme="vscode"] .casino::before{
+  counter-increment:line;content:counter(line);
+  width:30px;flex:none;text-align:right;margin-right:12px;padding-right:10px;
+  color:#6e7681;border-right:1px solid #2d2d2d;
+}
+/* def casino_N(bills= */
+[data-theme="vscode"] .casino .num{
+  display:inline-flex;align-items:center;width:auto;height:auto;
+  margin:0;padding:0;background:none;border:none;border-radius:0;
+  font:inherit;color:#dcdcaa;
+}
+[data-theme="vscode"] .casino .num::before{content:"def casino_";color:#dcdcaa;}
+[data-theme="vscode"] .casino .num::after{content:"(bills=";color:#9cdcfe;}
+/* [ "80 k$", "50 k$" ]): */
+[data-theme="vscode"] .bills{
+  display:inline-flex;flex-direction:row;flex-wrap:wrap;align-items:center;
+  width:auto;margin:0;gap:0;
+}
+[data-theme="vscode"] .bills::before{content:"[";color:#d4d4d4;margin-right:5px;}
+[data-theme="vscode"] .bills::after{content:"]):";color:#d4d4d4;margin-left:5px;}
+[data-theme="vscode"] .bill{
+  background:none;border:none;border-radius:0;padding:0;width:auto;
+  color:#ce9178;font:inherit;
+}
+[data-theme="vscode"] .bill::before{content:'"';}
+[data-theme="vscode"] .bill::after{content:'"';}
+[data-theme="vscode"] .bill:not(:last-child)::after{content:'", ';}
+[data-theme="vscode"] .bill.taken{opacity:.3;}
+/* // ●●● (dés placés en commentaire) */
+[data-theme="vscode"] .dice-on-casino{
+  display:inline-flex;width:auto;gap:3px;align-items:center;margin-left:8px;
+}
+[data-theme="vscode"] .dice-on-casino:empty{display:none;}
+[data-theme="vscode"] .dice-on-casino::before{content:"#";color:#6a9955;margin-right:5px;}
+[data-theme="vscode"] .dice-on-casino .die{width:11px;height:11px;border-radius:2px;border:none;}
+
+/* ====== VS Code : scoreboard = panneau de chat IA à droite ====== */
+[data-theme="vscode"] .sidebar{
+  position:fixed;right:0;
+  top:calc(var(--vsc-titlebar-h) + var(--vsc-tabs-h));
+  bottom:var(--vsc-status-h);width:300px;z-index:40;
+  background:#1e1e1e;border-left:1px solid #3c3c3c;
+  display:flex;flex-direction:column;gap:0;padding:0;margin:0;
+}
+[data-theme="vscode"] .sidebar::before{
+  content:"✦  Assistant IA";
+  flex:none;padding:11px 14px;font-size:13px;font-weight:600;color:#e7e7e7;letter-spacing:.2px;
+  background:#252526;border-bottom:1px solid #3c3c3c;
+}
+[data-theme="vscode"] .sidebar::after{
+  content:"Poser une question à l'IA…  ➤";
+  flex:none;margin:8px 12px 12px;padding:10px 12px;
+  border:1px solid #3c3c3c;border-radius:8px;color:#6b6b6b;background:#252526;font-size:12.5px;
+}
+[data-theme="vscode"] .round-badge{
+  flex:none;align-self:center;margin:10px 0 2px;
+  background:none;border:none;color:#858585;font-size:11px;padding:0;letter-spacing:1px;
+}
+[data-theme="vscode"] .scoreboard{
+  flex:1;overflow:auto;background:none;border:none;border-radius:0;box-shadow:none;
+  padding:10px 12px;gap:12px;
+}
+/* message d'introduction de l'assistant */
+[data-theme="vscode"] .scoreboard::before{
+  content:"✦  Voici le classement en direct des joueurs 👇";
+  display:block;color:#cccccc;font-size:12.5px;line-height:1.5;
+  padding:6px 8px 10px;margin-bottom:4px;border-bottom:1px solid #2d2d2d;
+}
+/* chaque joueur = un message du chat (pastille + auteur + contenu court) */
+[data-theme="vscode"] .score-row{
+  display:flex;flex-direction:column;gap:2px;
+  background:none;border:none;border-radius:6px;padding:7px 8px;
+  transform:none;box-shadow:none;
+}
+[data-theme="vscode"] .score-row:hover{background:rgba(255,255,255,.03);}
+[data-theme="vscode"] .score-row.active{background:rgba(78,193,176,.07);}
+[data-theme="vscode"] .score-row .score-main{align-items:baseline;}
+[data-theme="vscode"] .score-row .score-name{color:#e7e7e7;font-size:13px;}
+[data-theme="vscode"] .score-row .score-name .dot{width:9px;height:9px;}
+/* en chat IA : on masque les pips et le badge, et la couronne */
+[data-theme="vscode"] .score-row .score-dice{display:none;}
+[data-theme="vscode"] .score-row .score-money{display:none;}
+[data-theme="vscode"] .score-row .crown{display:none;}
+[data-theme="vscode"] .score-row .score-msg{
+  display:block;margin-top:1px;
+  color:#cccccc;font-size:12.5px;line-height:1.55;
+}
+[data-theme="vscode"] .main-area{margin-right:calc(var(--vsc-chat-w) + 16px);}
+
+/* ====== VS Code : terminal intégré en bas (sortie + invite) ====== */
+.vsc-term-head{display:none;}
+/* le "dock" est le panneau fixe ancré en bas */
+[data-theme="vscode"] .terminal-dock{
+  position:fixed;z-index:45;
+  left:calc(var(--vsc-activity-w) + var(--vsc-sidebar-w));
+  right:var(--vsc-chat-w);
+  bottom:var(--vsc-status-h);height:var(--vsc-term-h);
+  background:#181818;border-top:1px solid #3c3c3c;
+  display:flex;flex-direction:column;
+  font-family:'Consolas','SFMono-Regular','Menlo',monospace;
+}
+/* invite (lancer) en haut, sortie (historique) en bas */
+[data-theme="vscode"] .vsc-term-head{order:0;}
+[data-theme="vscode"] .controls{order:1;}
+[data-theme="vscode"] .log{order:2;}
+/* barre d'onglets du panneau */
+[data-theme="vscode"] .vsc-term-head{
+  display:flex;align-items:center;gap:20px;flex:none;
+  height:32px;padding:0 14px;background:#1e1e1e;border-bottom:1px solid #2d2d2d;
+  font-size:11px;letter-spacing:.4px;color:#969696;text-transform:uppercase;
+}
+/* historique des dés et des gains = sortie du terminal (plus récent en bas) */
+[data-theme="vscode"] .log{
+  flex:1;min-height:0;overflow-y:auto;
+  display:flex;flex-direction:column-reverse;
+  background:none;border:none;border-top:1px solid #2d2d2d;border-radius:0;
+  margin:0;max-width:none;max-height:none;
+  padding:10px 16px;font-family:inherit;font-size:12.5px;line-height:1.55;color:#cccccc;
+}
+[data-theme="vscode"] .log div{margin:0;}
+/* l'invite n'est plus fixe : elle vit dans le dock */
+[data-theme="vscode"] .controls{
+  flex:none;position:static;left:auto;right:auto;bottom:auto;height:auto;z-index:auto;
+  background:#1e1e1e;border:none;border-radius:0;
+  padding:0;margin:0;text-align:left;
+  display:flex;flex-direction:column;
+  font-family:inherit;
+}
+[data-theme="vscode"] .vsc-term-head .tt{height:32px;display:flex;align-items:center;border-bottom:1px solid transparent;cursor:default;}
+[data-theme="vscode"] .vsc-term-head .tt:hover{color:#cfcfcf;}
+[data-theme="vscode"] .vsc-term-head .tt.active{color:#e7e7e7;border-bottom-color:#e7e7e7;}
+[data-theme="vscode"] .vsc-term-head .vsc-term-tools{margin-left:auto;color:#9d9d9d;letter-spacing:3px;}
+/* corps du terminal (sortie + invite) */
+[data-theme="vscode"] .vsc-term-body{
+  flex:1;overflow:auto;padding:12px 16px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:10px;
+  color:#cccccc;font-size:13px;line-height:1.5;
+}
+/* invite : indique le joueur courant */
+[data-theme="vscode"] .vsc-term-body .turn-banner{
+  margin:0;font-weight:normal;color:#cccccc;font-size:13px;
+}
+[data-theme="vscode"] .vsc-term-body .turn-banner::before{content:">>> ";color:#6a9955;}
+/* le bouton "lancer" devient une commande REPL */
+[data-theme="vscode"] #rollBtn{
+  background:none;border:none;box-shadow:none;padding:0;margin:0;
+  font-family:inherit;font-size:0;cursor:pointer;
+}
+[data-theme="vscode"] #rollBtn::before{
+  content:">>> roll()";font-size:13px;color:#dcdcaa;
+}
+[data-theme="vscode"] #rollBtn:hover:not(:disabled)::before{color:#fff;text-decoration:underline;}
+[data-theme="vscode"] #rollBtn:disabled{opacity:.45;}
+/* la main (dés lancés) = sortie du terminal */
+[data-theme="vscode"] .vsc-term-body .hand{
+  margin:0;min-height:0;justify-content:flex-start;align-items:center;gap:14px;flex-wrap:wrap;
+}
+[data-theme="vscode"] .vsc-term-body .die-group{gap:5px;}
+/* clic pour placer : en terminal, on surligne le texte (pas d'effet "boîte") */
+[data-theme="vscode"] .vsc-term-body .die-group.clickable:hover{transform:none;}
+[data-theme="vscode"] .vsc-term-body .die-group.clickable:hover .die{
+  box-shadow:none;color:#fff;text-decoration:underline;
+}
+[data-theme="vscode"] .vsc-term-body .hand:not(:empty)::before{content:"=> [";color:#6a9955;margin-right:2px;}
+[data-theme="vscode"] .vsc-term-body .hand:not(:empty)::after{content:"]";color:#6a9955;margin-left:2px;}
+[data-theme="vscode"] .vsc-term-body .hand .die{
+  width:auto;height:auto;background:none;border:none;border-radius:0;box-shadow:none;
+  color:#b5cea8;font-family:inherit;font-size:13px;
+}
+/* choix de placement = options de commande */
+[data-theme="vscode"] .vsc-term-body .choices{justify-content:flex-start;gap:8px;margin:0;flex-wrap:wrap;}
+[data-theme="vscode"] .vsc-term-body .choice-btn{
+  background:#252526;border:1px solid #3c3c3c;color:#cccccc;border-radius:4px;
+  font-family:inherit;font-size:12px;box-shadow:none;min-width:0;padding:6px 12px;
+}
+[data-theme="vscode"] .vsc-term-body .choice-btn:hover{background:#2d2d2d;color:#fff;}
+
+/* Mobile : on réduit l'habillage (pas d'explorateur ni d'onglets) */
+@media (max-width:760px){
+  [data-theme="vscode"] .vsc-activity,
+  [data-theme="vscode"] .vsc-sidebar,
+  [data-theme="vscode"] .vsc-tabs,
+  [data-theme="vscode"] .vsc-menu,
+  [data-theme="vscode"] .vsc-title{display:none;}
+  [data-theme="vscode"] body{
+    padding:calc(var(--vsc-titlebar-h) + 12px) 12px calc(var(--vsc-status-h) + 12px) 12px;
+  }
+  [data-theme="vscode"] .vsc-sb-right .vsc-si:not(:last-child){display:none;}
+  /* le chat repasse en bloc normal */
+  [data-theme="vscode"] .sidebar{
+    position:static;width:100%;border-left:none;
+    top:auto;bottom:auto;
+  }
+  [data-theme="vscode"] .sidebar::before,
+  [data-theme="vscode"] .sidebar::after{display:none;}
+  [data-theme="vscode"] .scoreboard{flex-direction:column;overflow:visible;}
+  [data-theme="vscode"] .main-area{margin-right:0;}
+  /* le terminal repasse dans le flux */
+  [data-theme="vscode"] .terminal-dock{
+    position:static;left:auto;right:auto;bottom:auto;height:auto;
+    border:1px solid #3c3c3c;border-radius:4px;margin-top:14px;
+  }
+  [data-theme="vscode"] .log{max-height:220px;}
+  [data-theme="vscode"] .vsc-term-body{overflow:visible;}
+}
+
+/* ====== VS Code : Accueil & Salon façon page "Démarrer" (sobre, sans gros boutons) ====== */
+/* pas de carte : juste du contenu dans l'éditeur, police d'interface */
+[data-theme="vscode"] #home-screen .card,
+[data-theme="vscode"] #lobby-screen .card{
+  background:none;border:none;border-radius:0;box-shadow:none;
+  max-width:520px;margin:0;padding:0;
+  font-family:'Segoe UI','Helvetica Neue',system-ui,sans-serif;
+}
+/* libellés discrets */
+[data-theme="vscode"] #home-screen label,
+[data-theme="vscode"] #lobby-screen label,
+[data-theme="vscode"] .lobby-code-label,
+[data-theme="vscode"] .lobby-players-title{
+  color:#9d9d9d;text-transform:none;letter-spacing:0;font-weight:normal;font-size:.85em;
+}
+[data-theme="vscode"] .or-sep{
+  color:#9d9d9d;text-transform:none;letter-spacing:0;text-align:left;font-size:.85em;opacity:1;
+}
+/* actions = liens bleus (comme la page Démarrer), pas des boutons */
+[data-theme="vscode"] #createBtn,
+[data-theme="vscode"] #joinBtn,
+[data-theme="vscode"] #startGameBtn,
+[data-theme="vscode"] #copyBtn{
+  background:none;border:none;box-shadow:none;padding:0;margin:0;
+  color:#4daafc;font-weight:normal;font-size:13.5px;border-radius:0;
+}
+[data-theme="vscode"] #createBtn:hover:not(:disabled),
+[data-theme="vscode"] #joinBtn:hover:not(:disabled),
+[data-theme="vscode"] #startGameBtn:hover:not(:disabled),
+[data-theme="vscode"] #copyBtn:hover:not(:disabled){
+  text-decoration:underline;background:none;color:#4daafc;
+}
+[data-theme="vscode"] #createBtn:disabled,
+[data-theme="vscode"] #startGameBtn:disabled{color:#5a5a5a;background:none;}
+[data-theme="vscode"] .start-btn{display:inline-block;margin:14px 0 0;}
+[data-theme="vscode"] .join-row{gap:12px;}
+
+/* Salon : code en monospace simple, sans gadget */
+[data-theme="vscode"] .lobby-code{
+  text-align:left;font-size:1.7em;letter-spacing:5px;text-shadow:none;
+  color:#569cd6;font-family:'Consolas','Menlo',monospace;margin:2px 0 14px;padding:0;
+}
+[data-theme="vscode"] .lobby-player{
+  background:none;border:none;border-radius:0;padding:4px 0;
+}
+[data-theme="vscode"] .lobby-player .dot{width:10px;height:10px;}
