@@ -1,81 +1,106 @@
-# Las Vegas — en ligne
+# Plateforme de jeux en ligne
 
-Adaptation web et multijoueur en ligne du jeu de dés **Las Vegas**. De 2 à 5 joueurs
-s'affrontent à distance, chacun sur son appareil, en partageant simplement un lien.
+Une petite **plateforme de jeux multijoueurs en ligne** : on choisit un jeu dans un menu,
+on crée un salon, et on joue à distance en partageant un lien. Chaque joueur est sur son
+appareil ; l'état est synchronisé en temps réel.
 
-La logique de jeu est **autoritaire côté serveur** (Node + WebSocket) : l'état de la partie
-est synchronisé en temps réel et chaque joueur ne peut agir que pendant son propre tour.
+Le premier jeu disponible est **Las Vegas** (jeu de dés). Le dépôt est conçu pour
+**accueillir facilement d'autres jeux** — voir [games/README.md](games/README.md).
+
+La logique est **autoritaire côté serveur** (Node + WebSocket) : chaque joueur n'agit que
+pendant son tour, et le serveur valide toutes les actions.
 
 ## Fonctionnalités
 
-- 🎲 Parties en ligne de 2 à 5 joueurs via un lien de partage
-- 🏠 Salons rejoignables par code à 4 caractères
-- ⏱️ Synchronisation temps réel (WebSocket) ; les spectateurs suivent la partie en direct
-- 🔒 Tours protégés : impossible de jouer à la place d'un autre joueur
-- 🔁 Reconnexion automatique après un rafraîchissement ou une coupure réseau
+- 🎮 Menu de sélection de jeu (extensible : un jeu ajouté apparaît tout seul)
+- 🌐 Parties en ligne via un lien de partage / un code de salon à 4 caractères
+- ⏱️ Synchronisation temps réel (WebSocket) ; les spectateurs suivent en direct
+- 🔒 Tours protégés côté serveur (impossible de jouer à la place d'un autre)
+- 🔁 Reconnexion automatique (rafraîchissement ou coupure réseau)
+- 🕹️ Parties en cours affichées au menu, reprise en un clic ; abandon géré
+- 🎨 Thèmes : un thème de base pour le menu, un thème propre à chaque jeu, et un
+  thème « VS Code » global (bascule dans le header)
 - 📱 Interface responsive (ordinateur, tablette, téléphone)
 
-## Règles du jeu
+## Architecture
+
+Le **serveur** est un hôte générique : il gère les salons, le lobby, les connexions et
+délègue la logique à un **moteur de jeu** via un registre. Le **front** est une coquille
+commune (menu, salon, header, thèmes) qui charge dynamiquement les fichiers d'un jeu.
+
+```
+server.js                     Hôte : salons, lobby, WebSocket, registre de jeux, /api/*
+package.json                  Dépendances (express, ws)
+games/
+  README.md                   ← Guide « Ajouter un jeu »
+  las-vegas/
+    engine.js                 Logique serveur (non exposée au navigateur)
+    view.html                 Markup de l'écran de jeu
+    view.js                   Module de rendu client
+    casino.css                Thème du jeu (mode normal)
+    vscode.css                Rendu du jeu en thème VS Code
+public/
+  index.html                  Coquille : menu, accueil, salon, résultats, header
+  app.js                      Connexion, navigation, thèmes, chargement des jeux
+  styles.css                  Thème de BASE (menu) + layout commun
+  theme-vscode.css            Thème VS Code (habillage éditeur + écrans communs)
+render.yaml                   Déploiement (Render)
+```
+
+- **Serveur** : Node.js, Express (statique) et `ws` (WebSocket).
+- **Client** : HTML/CSS/JS natif, sans build ni dépendance. Les modules de jeu sont
+  chargés à la volée (`fetch` + `import()`) selon le jeu choisi.
+
+## Jouer
+
+1. Choisir un jeu dans le menu.
+2. Saisir un pseudo et **créer une partie** (un code + un lien de partage sont générés),
+   ou **rejoindre** avec un code.
+3. L'hôte **lance la partie** quand tout le monde est là.
+4. On joue chacun son tour ; à la fin, le classement s'affiche (l'hôte peut relancer).
+
+Le header propose un menu (retour au menu, abandonner, copier le lien, changer de thème).
+
+### Las Vegas — règles
 
 - 4 manches, 8 dés par joueur.
-- Chaque casino (numéroté de 1 à 6) reçoit des billets jusqu'à atteindre au moins 50 k$.
-- À son tour, un joueur lance tous ses dés restants, puis choisit une valeur : tous les dés
-  de cette valeur sont placés sur le casino correspondant.
-- Au décompte d'une manche, sur chaque casino : les joueurs **à égalité de nombre de dés**
-  sont éliminés du paiement de ce casino. Les autres encaissent les billets — du plus gros
-  au plus petit — par ordre décroissant de nombre de dés.
-- Le joueur le plus riche après 4 manches gagne.
-
-## Comment jouer
-
-1. Un joueur saisit son pseudo et **crée une partie** : un code de salon et un lien de
-   partage sont générés.
-2. Les autres ouvrent le lien (ou saisissent le code), choisissent un pseudo et **rejoignent**.
-3. L'hôte **lance la partie** une fois tout le monde présent (2 à 5 joueurs).
-4. Chacun joue à son tour : **lancer les dés**, puis placer une valeur sur un casino.
-5. Après 4 manches, le classement final s'affiche ; l'hôte peut relancer une partie.
-
-## Stack technique
-
-- **Serveur** : Node.js, Express (fichiers statiques) et `ws` (WebSocket)
-- **Client** : HTML/CSS/JavaScript natif, sans dépendance ni build
-
-```
-server.js          Serveur HTTP + WebSocket + logique de jeu (salons)
-package.json       Dépendances
-public/
-  index.html       Écrans : accueil, salon, jeu, résultats
-  client.js        Connexion WebSocket et rendu piloté par l'état serveur
-  styles.css       Styles (responsive inclus)
-render.yaml        Configuration de déploiement (Render)
-```
+- Chaque casino (1 à 6) reçoit des billets jusqu'à atteindre au moins 50 k$.
+- À son tour, on lance ses dés restants et on place tous les dés d'une même valeur sur le
+  casino correspondant.
+- Au décompte : sur chaque casino, les joueurs **à égalité de nombre de dés** ne gagnent
+  rien ; les autres encaissent les billets (du plus gros au plus petit) par ordre
+  décroissant de dés.
+- Le plus riche après 4 manches gagne.
 
 ## Lancer en local
 
-Prérequis : Node.js 18 ou supérieur.
+Prérequis : Node.js 18+.
 
 ```bash
 npm install
 npm start
 ```
 
-L'application est accessible sur http://localhost:3000.
+Accessible sur http://localhost:3000.
 
-Pour tester à plusieurs sur une même machine, il suffit d'ouvrir plusieurs onglets. Pour
-jouer entre appareils du même réseau Wi-Fi, utilisez l'adresse IP locale de la machine hôte
-(par exemple `http://192.168.1.20:3000`).
+Pour tester à plusieurs sur une même machine, ouvrir **plusieurs onglets** (chaque onglet =
+un joueur distinct). Entre appareils du même Wi-Fi, utiliser l'IP locale de l'hôte
+(ex. `http://192.168.1.20:3000`).
+
+## Ajouter un jeu
+
+Un jeu = un dossier `games/<id>/` + une ligne d'enregistrement dans `server.js`. Il apparaît
+ensuite automatiquement dans le menu. Interface, contrat client, thèmes et checklist :
+**[games/README.md](games/README.md)**. Le plus simple est de copier `games/las-vegas/`.
 
 ## Déploiement
 
-Le projet fonctionne sur n'importe quel hébergeur Node. La commande de démarrage est
-`node server.js` et le port est lu depuis `process.env.PORT`.
+Fonctionne sur n'importe quel hébergeur Node : commande de démarrage `node server.js`,
+port lu depuis `process.env.PORT`. Un `render.yaml` permet un déploiement en un clic sur
+[Render](https://render.com) (Web Service, plan gratuit). Railway et Fly.io conviennent aussi.
 
-Un fichier `render.yaml` est fourni pour un déploiement en un clic sur
-[Render](https://render.com) : créer un **Web Service** à partir du dépôt, le reste est
-détecté automatiquement (plan gratuit disponible). Railway et Fly.io conviennent également.
-
-> ℹ️ Sur les offres gratuites, le serveur peut se mettre en veille après une période
-> d'inactivité ; le premier accès suivant prend alors quelques secondes.
+> ℹ️ Sur les offres gratuites, le serveur se met en veille après une période d'inactivité ;
+> le premier accès suivant prend quelques secondes.
 
 ## Licence
 
