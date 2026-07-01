@@ -1,0 +1,211 @@
+/* ==========================================================================
+   Las Vegas — styles du jeu (thème VS Code).
+   Chargé après casino.css quand ce jeu est actif ; s'active sous
+   [data-theme="vscode"]. Utilise les variables --vsc-* définies par la coquille.
+   ========================================================================== */
+
+/* ====== Casinos rendus comme des lignes de code ====== */
+[data-theme="vscode"] #game-screen{max-width:none;margin:0;gap:0;}
+[data-theme="vscode"] .board{
+  display:block;grid-template-columns:none;
+  background:#1e1e1e;border:1px solid #3c3c3c;border-radius:4px;
+  margin:0 0 16px;max-width:none;padding:10px 0;
+  counter-reset:line;
+  font-family:'Consolas','SFMono-Regular','Menlo',monospace;
+  font-size:14px;line-height:1.7;
+  text-align:left;
+}
+[data-theme="vscode"] .controls,
+[data-theme="vscode"] .log{margin-left:0;margin-right:0;max-width:none;}
+[data-theme="vscode"] .casino{
+  display:flex;flex-direction:row;justify-content:flex-start;
+  align-items:center;flex-wrap:wrap;gap:7px;
+  min-height:0;background:none;border:none;border-radius:0;padding:1px 14px;
+}
+[data-theme="vscode"] .casino:hover{background:#262626;}
+[data-theme="vscode"] .casino::before{
+  counter-increment:line;content:counter(line);
+  width:30px;flex:none;text-align:right;margin-right:12px;padding-right:10px;
+  color:#6e7681;border-right:1px solid #2d2d2d;
+}
+/* def casino_N(bills= */
+[data-theme="vscode"] .casino .num{
+  display:inline-flex;align-items:center;width:auto;height:auto;
+  margin:0;padding:0;background:none;border:none;border-radius:0;
+  font:inherit;color:#dcdcaa;
+}
+[data-theme="vscode"] .casino .num::before{content:"def casino_";color:#dcdcaa;}
+[data-theme="vscode"] .casino .num::after{content:"(bills=";color:#9cdcfe;}
+/* [ "80 k$", "50 k$" ]): */
+[data-theme="vscode"] .bills{
+  display:inline-flex;flex-direction:row;flex-wrap:wrap;align-items:center;
+  width:auto;margin:0;gap:0;
+}
+[data-theme="vscode"] .bills::before{content:"[";color:#d4d4d4;margin-right:5px;}
+[data-theme="vscode"] .bills::after{content:"]):";color:#d4d4d4;margin-left:5px;}
+[data-theme="vscode"] .bill{
+  background:none;border:none;border-radius:0;padding:0;width:auto;
+  color:#ce9178;font:inherit;
+}
+[data-theme="vscode"] .bill::before{content:'"';}
+[data-theme="vscode"] .bill::after{content:'"';}
+[data-theme="vscode"] .bill:not(:last-child)::after{content:'", ';}
+[data-theme="vscode"] .bill.taken{opacity:.3;}
+/* # ●●● (dés placés en commentaire) */
+[data-theme="vscode"] .dice-on-casino{
+  display:inline-flex;width:auto;gap:3px;align-items:center;margin-left:8px;
+}
+[data-theme="vscode"] .dice-on-casino:empty{display:none;}
+[data-theme="vscode"] .dice-on-casino::before{content:"#";color:#6a9955;margin-right:5px;}
+[data-theme="vscode"] .dice-on-casino .die{width:11px;height:11px;border-radius:2px;border:none;}
+
+/* ====== Scoreboard = panneau de chat IA à droite ====== */
+[data-theme="vscode"] .sidebar{
+  position:fixed;right:0;
+  top:calc(var(--vsc-titlebar-h) + var(--vsc-tabs-h));
+  bottom:var(--vsc-status-h);width:var(--vsc-chat-w);z-index:40;
+  background:#1e1e1e;border-left:1px solid #3c3c3c;
+  display:flex;flex-direction:column;gap:0;padding:0;margin:0;
+}
+[data-theme="vscode"] .sidebar::before{
+  content:"✦  Assistant IA";
+  flex:none;padding:11px 14px;font-size:13px;font-weight:600;color:#e7e7e7;letter-spacing:.2px;
+  background:#252526;border-bottom:1px solid #3c3c3c;
+}
+[data-theme="vscode"] .sidebar::after{
+  content:"Poser une question à l'IA…  ➤";
+  flex:none;margin:8px 12px 12px;padding:10px 12px;
+  border:1px solid #3c3c3c;border-radius:8px;color:#6b6b6b;background:#252526;font-size:12.5px;
+}
+[data-theme="vscode"] .round-badge{
+  flex:none;align-self:center;margin:10px 0 2px;
+  background:none;border:none;color:#858585;font-size:11px;padding:0;letter-spacing:1px;
+}
+[data-theme="vscode"] .scoreboard{
+  flex:1;overflow:auto;background:none;border:none;border-radius:0;box-shadow:none;
+  padding:10px 12px;gap:12px;
+}
+[data-theme="vscode"] .scoreboard::before{
+  content:"✦  Voici le classement en direct des joueurs 👇";
+  display:block;color:#cccccc;font-size:12.5px;line-height:1.5;
+  padding:6px 8px 10px;margin-bottom:4px;border-bottom:1px solid #2d2d2d;
+}
+[data-theme="vscode"] .score-row{
+  display:flex;flex-direction:column;gap:2px;
+  background:none;border:none;border-radius:6px;padding:7px 8px;
+  transform:none;box-shadow:none;
+}
+[data-theme="vscode"] .score-row:hover{background:rgba(255,255,255,.03);}
+[data-theme="vscode"] .score-row.active{background:rgba(78,193,176,.07);}
+[data-theme="vscode"] .score-row .score-main{align-items:baseline;}
+[data-theme="vscode"] .score-row .score-name{color:#e7e7e7;font-size:13px;}
+[data-theme="vscode"] .score-row .score-name .dot{width:9px;height:9px;}
+[data-theme="vscode"] .score-row .score-dice{display:none;}
+[data-theme="vscode"] .score-row .score-money{display:none;}
+[data-theme="vscode"] .score-row .crown{display:none;}
+[data-theme="vscode"] .score-row .score-msg{
+  display:block;margin-top:1px;color:#cccccc;font-size:12.5px;line-height:1.55;
+}
+[data-theme="vscode"] .main-area{margin-right:calc(var(--vsc-chat-w) + 16px);}
+
+/* ====== Terminal intégré en bas (sortie + invite) ====== */
+/* on réserve la hauteur du terminal en bas de la zone éditeur */
+[data-theme="vscode"] body{
+  padding-bottom:calc(var(--vsc-status-h) + var(--vsc-term-h) + 16px);
+}
+[data-theme="vscode"] .terminal-dock{
+  position:fixed;z-index:45;
+  left:calc(var(--vsc-activity-w) + var(--vsc-sidebar-w));
+  right:var(--vsc-chat-w);
+  bottom:var(--vsc-status-h);height:var(--vsc-term-h);
+  background:#181818;border-top:1px solid #3c3c3c;
+  display:flex;flex-direction:column;
+  font-family:'Consolas','SFMono-Regular','Menlo',monospace;
+}
+/* invite (lancer) en haut, sortie (historique) en bas */
+[data-theme="vscode"] .vsc-term-head{order:0;}
+[data-theme="vscode"] .controls{order:1;}
+[data-theme="vscode"] .log{order:2;}
+/* barre d'onglets du panneau */
+[data-theme="vscode"] .vsc-term-head{
+  display:flex;align-items:center;gap:20px;flex:none;
+  height:32px;padding:0 14px;background:#1e1e1e;border-bottom:1px solid #2d2d2d;
+  font-size:11px;letter-spacing:.4px;color:#969696;text-transform:uppercase;
+}
+[data-theme="vscode"] .vsc-term-head .tt{height:32px;display:flex;align-items:center;border-bottom:1px solid transparent;cursor:default;}
+[data-theme="vscode"] .vsc-term-head .tt:hover{color:#cfcfcf;}
+[data-theme="vscode"] .vsc-term-head .tt.active{color:#e7e7e7;border-bottom-color:#e7e7e7;}
+[data-theme="vscode"] .vsc-term-head .vsc-term-tools{margin-left:auto;color:#9d9d9d;letter-spacing:3px;}
+/* historique = sortie du terminal (plus récent en bas) */
+[data-theme="vscode"] .log{
+  flex:1;min-height:0;overflow-y:auto;
+  display:flex;flex-direction:column-reverse;
+  background:none;border:none;border-top:1px solid #2d2d2d;border-radius:0;
+  margin:0;max-width:none;max-height:none;
+  padding:10px 16px;font-family:inherit;font-size:12.5px;line-height:1.55;color:#cccccc;
+}
+[data-theme="vscode"] .log div{margin:0;}
+/* invite (dans le dock) */
+[data-theme="vscode"] .controls{
+  flex:none;position:static;left:auto;right:auto;bottom:auto;height:auto;z-index:auto;
+  background:#1e1e1e;border:none;border-radius:0;
+  padding:0;margin:0;text-align:left;
+  display:flex;flex-direction:column;font-family:inherit;
+}
+[data-theme="vscode"] .vsc-term-body{
+  flex:1;overflow:auto;padding:12px 16px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:10px;
+  color:#cccccc;font-size:13px;line-height:1.5;
+}
+[data-theme="vscode"] .vsc-term-body .turn-banner{
+  margin:0;font-weight:normal;color:#cccccc;font-size:13px;
+}
+[data-theme="vscode"] .vsc-term-body .turn-banner::before{content:">>> ";color:#6a9955;}
+/* le bouton "lancer" devient une commande REPL */
+[data-theme="vscode"] #rollBtn{
+  background:none;border:none;box-shadow:none;padding:0;margin:0;
+  font-family:inherit;font-size:0;cursor:pointer;
+}
+[data-theme="vscode"] #rollBtn::before{content:">>> roll()";font-size:13px;color:#dcdcaa;}
+[data-theme="vscode"] #rollBtn:hover:not(:disabled)::before{color:#fff;text-decoration:underline;}
+[data-theme="vscode"] #rollBtn:disabled{opacity:.45;}
+/* la main (dés lancés) = sortie du terminal */
+[data-theme="vscode"] .vsc-term-body .hand{
+  margin:0;min-height:0;justify-content:flex-start;align-items:center;gap:14px;flex-wrap:wrap;
+}
+[data-theme="vscode"] .vsc-term-body .die-group{gap:5px;}
+[data-theme="vscode"] .vsc-term-body .die-group.clickable:hover{transform:none;}
+[data-theme="vscode"] .vsc-term-body .die-group.clickable:hover .die{
+  box-shadow:none;color:#fff;text-decoration:underline;
+}
+[data-theme="vscode"] .vsc-term-body .hand:not(:empty)::before{content:"=> [";color:#6a9955;margin-right:2px;}
+[data-theme="vscode"] .vsc-term-body .hand:not(:empty)::after{content:"]";color:#6a9955;margin-left:2px;}
+[data-theme="vscode"] .vsc-term-body .hand .die{
+  width:auto;height:auto;background:none;border:none;border-radius:0;box-shadow:none;
+  color:#b5cea8;font-family:inherit;font-size:13px;
+}
+/* choix de placement = options de commande */
+[data-theme="vscode"] .vsc-term-body .choices{justify-content:flex-start;gap:8px;margin:0;flex-wrap:wrap;}
+[data-theme="vscode"] .vsc-term-body .choice-btn{
+  background:#252526;border:1px solid #3c3c3c;color:#cccccc;border-radius:4px;
+  font-family:inherit;font-size:12px;box-shadow:none;min-width:0;padding:6px 12px;
+}
+[data-theme="vscode"] .vsc-term-body .choice-btn:hover{background:#2d2d2d;color:#fff;}
+
+/* ====== Mobile : chat et terminal repassent dans le flux ====== */
+@media (max-width:760px){
+  [data-theme="vscode"] body{padding-bottom:calc(var(--vsc-status-h) + 12px);}
+  [data-theme="vscode"] .sidebar{
+    position:static;width:100%;border-left:none;top:auto;bottom:auto;
+  }
+  [data-theme="vscode"] .sidebar::before,
+  [data-theme="vscode"] .sidebar::after{display:none;}
+  [data-theme="vscode"] .scoreboard{flex-direction:column;overflow:visible;}
+  [data-theme="vscode"] .main-area{margin-right:0;}
+  [data-theme="vscode"] .terminal-dock{
+    position:static;left:auto;right:auto;bottom:auto;height:auto;
+    border:1px solid #3c3c3c;border-radius:4px;margin-top:14px;
+  }
+  [data-theme="vscode"] .log{max-height:220px;}
+  [data-theme="vscode"] .vsc-term-body{overflow:visible;}
+}

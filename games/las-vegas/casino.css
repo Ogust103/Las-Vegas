@@ -1,0 +1,246 @@
+/* ==========================================================================
+   Las Vegas — styles du jeu (thème casino).
+   Chargé dynamiquement par la coquille quand ce jeu est actif.
+   - Sous [data-game="las-vegas"] : le look casino s'applique à TOUTE la page
+     (accueil, salon, jeu) dès la sélection du jeu.
+   - Les styles d'écran de jeu (plateau, scoreboard…) suivent, non préfixés.
+   ========================================================================== */
+
+/* ===== Thème casino appliqué à toute la page ===== */
+html[data-game="las-vegas"]{
+  --felt:#0b3d2e; --felt-dark:#072a20; --gold:#d4af37; --gold-bright:#f4d35e;
+  --cream:#f4ecd8; --red:#a8322d; --ink:#1a1a1a;
+}
+[data-game="las-vegas"] body{
+  background:radial-gradient(ellipse at top, #0f4a36 0%, var(--felt) 45%, var(--felt-dark) 100%);
+  font-family:'Georgia','Times New Roman',serif;
+}
+[data-game="las-vegas"] h1{ text-shadow:0 0 18px rgba(244,211,94,.5), 0 2px 0 #000; letter-spacing:6px; }
+[data-game="las-vegas"] .card{ background:rgba(0,0,0,.25); border-color:rgba(212,175,55,.4); }
+[data-game="las-vegas"] select,
+[data-game="las-vegas"] input[type=text]{ background:var(--cream); color:var(--ink); border:1px solid var(--gold); }
+[data-game="las-vegas"] .share-row input{ color:var(--ink); }
+[data-game="las-vegas"] button{
+  background:linear-gradient(180deg, var(--gold-bright), var(--gold)); color:#2a2200; font-weight:bold;
+  box-shadow:0 3px 0 #8a6d1f, 0 6px 10px rgba(0,0,0,.4);
+}
+[data-game="las-vegas"] button:hover:not(:disabled){filter:none;}
+[data-game="las-vegas"] button:active{transform:translateY(3px);box-shadow:0 0 0 #8a6d1f;}
+[data-game="las-vegas"] button:disabled{background:#777;color:#ccc;}
+[data-game="las-vegas"] button.secondary{
+  background:linear-gradient(180deg,#2a6e54,#185640); color:var(--cream); border:none;
+  box-shadow:0 3px 0 #0c3a2a, 0 6px 10px rgba(0,0,0,.4);
+}
+[data-game="las-vegas"] .lobby-player{ border-color:rgba(212,175,55,.25); }
+[data-game="las-vegas"] .rank{ background:rgba(0,0,0,.3); border-color:var(--gold); }
+[data-game="las-vegas"] .conn-status{ background:rgba(0,0,0,.35); }
+[data-game="las-vegas"] .header-menu{ background:rgba(10,32,24,.98); border-color:var(--gold); }
+
+/* Layout de l'écran de jeu */
+#game-screen{
+  max-width:1400px;margin:0 auto;
+  align-items:flex-start;gap:20px;
+}
+.sidebar{
+  flex:none;width:280px;
+  position:sticky;top:20px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.main-area{flex:1;min-width:0;}
+.round-badge{
+  display:block;text-align:center;
+  background:var(--red);color:var(--cream);
+  padding:8px 16px;border-radius:12px;font-weight:bold;letter-spacing:1px;
+  border:1px solid rgba(255,255,255,.3);
+}
+
+/* Scoreboard */
+.scoreboard{
+  display:flex;flex-direction:column;gap:8px;
+  background:rgba(0,0,0,.3);
+  border:1px solid rgba(212,175,55,.4);
+  border-radius:12px;
+  padding:10px;
+  box-shadow:0 6px 18px rgba(0,0,0,.35);
+}
+.score-row{
+  display:flex;flex-direction:column;gap:6px;
+  background:rgba(255,255,255,.04);
+  border-left:5px solid var(--pc);
+  border-radius:8px;
+  padding:8px 12px;
+  transition:transform .12s, box-shadow .12s, background .12s;
+}
+.score-row.active{
+  background:rgba(244,211,94,.12);
+  box-shadow:0 0 0 2px var(--gold-bright), 0 4px 12px rgba(0,0,0,.4);
+  transform:translateX(3px);
+}
+.score-row.offline{opacity:.55;}
+.score-main{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.score-name{
+  display:flex;align-items:center;gap:7px;
+  font-size:1em;font-weight:bold;color:var(--cream);
+}
+.score-name .dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,.4);flex:none;}
+.score-name .crown{font-size:.95em;}
+.score-name .turn-arrow{color:var(--gold-bright);font-size:.8em;animation:pulse 1s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+.score-money{
+  font-size:1.15em;font-weight:bold;color:var(--gold-bright);white-space:nowrap;
+}
+.score-money small{font-size:.65em;opacity:.8;font-weight:normal;}
+.score-dice{display:flex;gap:4px;flex-wrap:wrap;}
+.score-dice .pip{
+  width:13px;height:13px;border-radius:3px;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.15);
+}
+.score-dice .pip.filled{
+  background:var(--pc);
+  border-color:rgba(255,255,255,.5);
+  box-shadow:0 0 4px var(--pc);
+}
+/* phrase de chat : masquée hors thème VS Code */
+.score-msg{display:none;}
+
+/* Plateau */
+.board{
+  max-width:1100px;margin:0 auto 20px;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:10px;
+}
+.casino{
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.25));
+  border:2px solid var(--gold);
+  border-radius:10px;
+  padding:8px;
+  min-height:190px;
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;
+}
+.casino .num{
+  font-size:1.6em;font-weight:bold;color:var(--gold-bright);
+  width:34px;height:34px;border-radius:50%;
+  background:var(--felt-dark);border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:6px;
+}
+.bills{display:flex;flex-direction:column;gap:3px;width:100%;align-items:center;margin-bottom:6px;}
+.bill{
+  background:linear-gradient(135deg,#2f7d4f,#1d5c39);
+  border:1px dashed var(--gold-bright);
+  color:var(--gold-bright);
+  font-weight:bold;
+  font-size:.85em;
+  border-radius:4px;
+  padding:3px 0;
+  width:78%;
+  text-align:center;
+}
+.bill.taken{opacity:.15;text-decoration:line-through;}
+/* une couleur par valeur de billet */
+.bill.b10{background:#607d8b;color:#fff;border-color:#eceff1;}
+.bill.b20{background:#00897b;color:#fff;border-color:#b2dfdb;}
+.bill.b30{background:#1e88e5;color:#fff;border-color:#bbdefb;}
+.bill.b40{background:#8e24aa;color:#fff;border-color:#e1bee7;}
+.bill.b50{background:#e53935;color:#fff;border-color:#ffcdd2;}
+.bill.b60{background:#fb8c00;color:#4a2c00;border-color:#ffe0b2;}
+.bill.b70{background:#43a047;color:#fff;border-color:#c8e6c9;}
+.bill.b80{background:#fdd835;color:#5a4a00;border-color:#fff59d;}
+.bill.b90{background:#3949ab;color:#fff;border-color:#c5cae9;}
+.dice-on-casino{
+  display:flex;flex-wrap:wrap;gap:3px;justify-content:center;width:100%;
+}
+.die{
+  width:20px;height:20px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7em;font-weight:bold;color:#fff;
+  border:1px solid rgba(255,255,255,.5);
+}
+
+/* la barre d'onglets du terminal n'existe que dans le thème VS Code */
+.vsc-term-head{display:none;}
+
+/* Contrôles + main */
+.controls{
+  max-width:1100px;margin:0 auto;
+  background:rgba(0,0,0,.3);
+  border:1px solid rgba(212,175,55,.4);
+  border-radius:10px;
+  padding:18px;
+  text-align:center;
+}
+.hand{
+  display:flex;justify-content:center;gap:22px;margin:14px 0;flex-wrap:wrap;
+  min-height:56px;
+}
+/* les dés d'une même valeur restent serrés ; les groupes sont bien séparés */
+.die-group{display:flex;gap:6px;}
+/* groupe cliquable : on peut cliquer un dé pour le placer */
+.die-group.clickable{cursor:pointer;border-radius:10px;transition:transform .08s;}
+.die-group.clickable:hover{transform:translateY(-4px);}
+.die-group.clickable:hover .die{box-shadow:0 6px 10px rgba(0,0,0,.5), 0 0 0 2px var(--gold-bright);}
+.hand .die{
+  width:46px;height:46px;font-size:1.4em;border-radius:8px;
+  background:var(--cream);color:var(--ink);border:2px solid var(--gold);
+  box-shadow:0 3px 0 rgba(0,0,0,.4);
+}
+/* une couleur par valeur de dé */
+.hand .die.v1{background:#e74c3c;color:#fff;border-color:#c0392b;}
+.hand .die.v2{background:#e67e22;color:#fff;border-color:#d35400;}
+.hand .die.v3{background:#f1c40f;color:#5a4a00;border-color:#d4ac0d;}
+.hand .die.v4{background:#27ae60;color:#fff;border-color:#1e8449;}
+.hand .die.v5{background:#2980b9;color:#fff;border-color:#1f618d;}
+.hand .die.v6{background:#8e44ad;color:#fff;border-color:#6c3483;}
+.choices{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px;}
+.choice-btn{min-width:70px;}
+.log{
+  max-width:1100px;margin:14px auto 0;
+  font-size:.85em;color:rgba(244,236,216,.7);
+  max-height:90px;overflow-y:auto;
+  background:rgba(0,0,0,.25);border-radius:8px;padding:8px 12px;
+}
+.log div{margin-bottom:2px;}
+.turn-banner{
+  font-size:1.2em;margin-bottom:6px;color:var(--gold-bright);font-weight:bold;
+}
+
+/* ===== Responsive ===== */
+@media (max-width:900px){
+  #game-screen{flex-direction:column;align-items:stretch;}
+  .main-area{width:100%;}
+  .sidebar{
+    width:100%;position:static;
+    flex-direction:row;flex-wrap:wrap;align-items:flex-start;
+  }
+  .round-badge{flex:none;}
+  .scoreboard{
+    flex:1;min-width:240px;
+    flex-direction:row;flex-wrap:wrap;
+  }
+  .score-row{flex:1;min-width:200px;}
+}
+@media (max-width:600px){
+  #game-screen{gap:14px;}
+  .sidebar{flex-direction:column;gap:10px;}
+  .scoreboard{flex-direction:column;}
+  .score-row{min-width:0;}
+  .board{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .casino{min-height:150px;padding:6px;}
+  .casino .num{width:30px;height:30px;font-size:1.3em;}
+  .bill{font-size:.78em;width:90%;}
+  .die{width:18px;height:18px;}
+  .controls{padding:14px;}
+  .turn-banner{font-size:1em;}
+  .hand{gap:6px;min-height:48px;}
+  .hand .die{width:40px;height:40px;font-size:1.2em;}
+  .choice-btn{font-size:.9em;padding:9px 14px;}
+  .log{font-size:.8em;max-height:80px;}
+}
+@media (max-width:380px){
+  .board{grid-template-columns:repeat(2,1fr);}
+}
