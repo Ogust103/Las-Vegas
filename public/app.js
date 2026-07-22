@@ -24,7 +24,7 @@ let state = null;
 let roomCode = null;
 let myName = localStorage.getItem('lv_name') || '';
 let reconnectTimer = null;
-let selectedGame = 'las-vegas';
+let selectedGame = null;
 let activeGameId = null; // jeu reflété dans le chrome (explorateur/onglet/titre)
 
 const $ = id => document.getElementById(id);
@@ -33,6 +33,13 @@ const FALLBACK_GAMES = [
   { id: 'las-vegas', name: 'Las Vegas', description: 'Misez vos dés sur les casinos et raflez les plus gros billets.', minPlayers: 2, maxPlayers: 5 },
 ];
 let gamesList = FALLBACK_GAMES.slice();
+
+function setDefaultGame(games) {
+  const firstGame = games && games.length ? games[0].id : null;
+  if (!firstGame) return;
+  if (!selectedGame || !games.some(g => g.id === selectedGame)) selectedGame = firstGame;
+  if (!activeGameId) activeGameId = selectedGame;
+}
 
 // ---------- Parties en cours (mémorisées par onglet, comme l'identité) ----------
 function savedRooms() { try { return JSON.parse(sessionStorage.getItem('lv_rooms') || '[]'); } catch (e) { return []; } }
@@ -140,8 +147,8 @@ function renderGames(games) {
 function loadGames() {
   fetch('/api/games')
     .then(r => r.ok ? r.json() : Promise.reject())
-    .then(games => { gamesList = (games && games.length) ? games : FALLBACK_GAMES; })
-    .catch(() => { gamesList = FALLBACK_GAMES; })
+    .then(games => { gamesList = (games && games.length) ? games : FALLBACK_GAMES; setDefaultGame(gamesList); })
+    .catch(() => { gamesList = FALLBACK_GAMES; setDefaultGame(gamesList); })
     .then(() => { renderGames(gamesList); renderChrome(); });
 }
 function selectGame(id, name) {
@@ -185,7 +192,8 @@ function rejoinRoom(code) {
 function createGame() {
   myName = $('homeName').value.trim();
   localStorage.setItem('lv_name', myName);
-  connect(() => send({ type: 'create', name: myName, clientId, gameType: selectedGame }));
+  const gameType = selectedGame || (gamesList[0] && gamesList[0].id);
+  connect(() => send({ type: 'create', name: myName, clientId, gameType }));
 }
 function joinGame(code) {
   myName = $('homeName').value.trim();
