@@ -11,7 +11,7 @@ games/<id>/
   engine.js     (obligatoire) logique serveur — JAMAIS servie au navigateur
   view.html     (obligatoire) fragment injecté dans #game-screen
   view.js       (obligatoire) module de rendu client (ES module)
-  casino.css    (recommandé)  thème du jeu (mode normal), sous [data-game="<id>"]
+  theme.css     (recommandé)  thème du jeu (mode normal), sous [data-game="<id>"]
   vscode.css    (recommandé)  rendu du jeu en thème VS Code, sous [data-theme="vscode"]
 ```
 
@@ -41,6 +41,13 @@ module.exports = {
       playersState: { /* [clientId]: { ...données par joueur } */ },
     };
   },
+
+  // (optionnel) sur-couche PRIVÉE par joueur, fusionnée par-dessus state().
+  // Indispensable pour les jeux à main secrète (cartes) : chaque joueur ne
+  // reçoit QUE sa propre main. Sans ce hook, tout le monde reçoit le même état.
+  privateState(room, clientId, ctx) {
+    return { /* ...données visibles du seul destinataire (ex. sa main)... */ };
+  },
 };
 ```
 
@@ -50,6 +57,10 @@ module.exports = {
   Appelle `ctx.broadcast(room)` après chaque changement d'état.
 - **`state()`** : renvoie l'état spécifique au jeu. La clé spéciale `playersState`
   (indexée par `clientId`) est fusionnée dans `players` côté client (ex. score, main…).
+- **`privateState(room, clientId, ctx)`** (optionnel) : renvoie une sur-couche
+  fusionnée par-dessus `state()` pour CE joueur uniquement. Utile pour les mains
+  secrètes. `ctx.sendError(room, clientId, message)` permet aussi de renvoyer un
+  message d'erreur ciblé (action illégale).
 - L'hôte gère pour toi : salons, lobby, connexions/reconnexions, hôte, abandon,
   fin de partie quand il ne reste plus assez de joueurs.
 
@@ -84,7 +95,7 @@ export default {
 
 ## 3. Les thèmes (CSS)
 
-- **`casino.css`** : le thème du jeu. Scoper le look « pleine page » sous
+- **`theme.css`** : le thème du jeu. Scoper le look « pleine page » sous
   `[data-game="<id>"]` (il s'applique dès la sélection : accueil + salon + jeu),
   et styler les éléments de l'écran de jeu.
 - **`vscode.css`** : le rendu du jeu quand le thème VS Code est actif
@@ -99,7 +110,7 @@ sont absents, le jeu s'affiche sans style dédié (le thème de base s'applique)
 - [ ] `games/<id>/engine.js` implémente l'interface + exporte `id/name/min/maxPlayers`.
 - [ ] `registerGame(require('./games/<id>/engine'))` ajouté dans `server.js`.
 - [ ] `games/<id>/view.html` (markup) + `games/<id>/view.js` (`{ init, renderGame }`).
-- [ ] `games/<id>/casino.css` et `games/<id>/vscode.css` (styles des deux thèmes).
+- [ ] `games/<id>/theme.css` et `games/<id>/vscode.css` (styles des deux thèmes).
 - [ ] Tester : le jeu apparaît dans le menu, une partie se crée/joue/rejoue.
 
 Le plus simple : copier le dossier `games/las-vegas/` comme point de départ.

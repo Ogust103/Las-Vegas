@@ -1,0 +1,197 @@
+/* ==========================================================================
+   Smile Life — styles du jeu (thème coloré « boîte de jeu »).
+   Chargé dynamiquement quand ce jeu est actif.
+   - Sous [data-game="smile-life"] : le look s'applique à TOUTE la page
+     (accueil, salon, jeu) dès la sélection du jeu.
+   - Les styles d'écran de jeu (tableaux, main…) suivent, non préfixés.
+   ========================================================================== */
+
+/* ===== Thème appliqué à toute la page ===== */
+html[data-game="smile-life"]{
+  --sky:#2aa8e6; --sky-deep:#1577b8; --pink:#ec1e79; --pink-deep:#c00f61;
+  --yellow:#ffd21e; --ink:#123049; --cream:#ffffff;
+}
+[data-game="smile-life"] body{
+  background:radial-gradient(ellipse at top, #7fd0f5 0%, var(--sky) 40%, var(--sky-deep) 100%);
+  color:#0e2b41;
+  font-family:'Trebuchet MS','Segoe UI',system-ui,sans-serif;
+}
+[data-game="smile-life"] h1{
+  color:#fff;letter-spacing:2px;
+  text-shadow:0 2px 0 var(--pink), 0 4px 10px rgba(0,0,0,.35);
+}
+[data-game="smile-life"] .card,
+[data-game="smile-life"] .final-screen{
+  background:rgba(255,255,255,.92);border-color:rgba(236,30,121,.35);color:#0e2b41;
+}
+[data-game="smile-life"] .menu-head,
+[data-game="smile-life"] .home-game-title{ color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.3); }
+[data-game="smile-life"] label{ color:#0e2b41; }
+[data-game="smile-life"] select,
+[data-game="smile-life"] input[type=text]{ background:#fff;color:var(--ink);border:2px solid var(--sky-deep); }
+[data-game="smile-life"] button{
+  background:linear-gradient(180deg, #ff4fa3, var(--pink)); color:#fff;font-weight:bold;
+  border:none;box-shadow:0 3px 0 var(--pink-deep), 0 6px 12px rgba(0,0,0,.25);
+}
+[data-game="smile-life"] button:hover:not(:disabled){ filter:brightness(1.05); }
+[data-game="smile-life"] button:active{ transform:translateY(3px); box-shadow:0 0 0 var(--pink-deep); }
+[data-game="smile-life"] button:disabled{ background:#b7c3cc;color:#eef3f6;box-shadow:none; }
+[data-game="smile-life"] button.secondary{
+  background:linear-gradient(180deg,#ffe15a,var(--yellow));color:#5a4600;
+  box-shadow:0 3px 0 #c9a300, 0 6px 12px rgba(0,0,0,.2);
+}
+[data-game="smile-life"] .game-tile{ background:rgba(255,255,255,.92);border-color:rgba(236,30,121,.3); }
+[data-game="smile-life"] .lobby-player{ border-color:rgba(236,30,121,.2); }
+[data-game="smile-life"] .rank{ background:rgba(255,255,255,.9);border-color:var(--pink);color:#0e2b41; }
+[data-game="smile-life"] .rank.win{ background:linear-gradient(180deg,#fff2b0,#ffe15a); }
+[data-game="smile-life"] .conn-status{ background:rgba(18,48,73,.9);color:#fff; }
+[data-game="smile-life"] .header-menu{ background:#fff;border-color:var(--pink);color:#0e2b41; }
+[data-game="smile-life"] .header-menu-item:hover{ background:rgba(236,30,121,.1); }
+
+/* ===== Layout de l'écran de jeu ===== */
+#game-screen{
+  max-width:1400px;margin:0 auto;
+  align-items:flex-start;gap:20px;
+}
+.sidebar{
+  flex:none;width:250px;position:sticky;top:16px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.main-area{ flex:1;min-width:0; }
+.round-badge{
+  display:block;text-align:center;
+  background:var(--yellow);color:#5a4600;
+  padding:8px 14px;border-radius:14px;font-weight:bold;letter-spacing:.5px;
+  border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.2);
+}
+
+/* Barre latérale : scores compacts */
+.scoreboard{
+  display:flex;flex-direction:column;gap:8px;
+  background:rgba(255,255,255,.9);border:2px solid rgba(236,30,121,.25);
+  border-radius:14px;padding:10px;box-shadow:0 6px 18px rgba(0,0,0,.2);
+}
+.score-row{
+  display:flex;flex-direction:column;gap:3px;
+  background:#fff;border-left:6px solid var(--pc);
+  border-radius:10px;padding:7px 10px;
+  transition:transform .12s, box-shadow .12s;
+}
+.score-row.active{ box-shadow:0 0 0 3px var(--yellow), 0 4px 10px rgba(0,0,0,.2);transform:translateX(3px); }
+.score-row.offline{ opacity:.55; }
+.score-main{ display:flex;align-items:center;justify-content:space-between;gap:8px; }
+.score-name{ display:flex;align-items:center;gap:6px;font-weight:bold;color:#0e2b41;font-size:.98em; }
+.score-name .dot{ width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.15);flex:none; }
+.score-name .turn-arrow{ color:var(--pink);font-size:.8em;animation:sl-pulse 1s ease-in-out infinite; }
+@keyframes sl-pulse{ 0%,100%{opacity:.4;} 50%{opacity:1;} }
+.score-money{ font-size:1.1em;font-weight:bold;color:var(--pink);white-space:nowrap; }
+.score-money small{ font-size:.8em; }
+.score-msg{ font-size:.8em;color:#4a6377; }
+
+/* ===== Tableaux des joueurs ===== */
+.boards{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:14px;margin-bottom:18px;
+}
+.board{
+  background:rgba(255,255,255,.94);border:3px solid #fff;
+  border-radius:16px;padding:12px 14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+  border-top:8px solid var(--pc);
+}
+.board.active{ box-shadow:0 0 0 4px var(--yellow), 0 8px 22px rgba(0,0,0,.28); }
+.board.me{ background:#fffdf5; }
+.board.offline{ opacity:.6; }
+.board-head{ display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px; }
+.bh-name{ display:flex;align-items:center;gap:6px;font-weight:bold;font-size:1.08em;color:#0e2b41;flex-wrap:wrap; }
+.bh-name .dot{ width:15px;height:15px;border-radius:50%;border:1px solid rgba(0,0,0,.15); }
+.bh-name .turn-arrow{ color:var(--pink);animation:sl-pulse 1s ease-in-out infinite; }
+.bh-score{ font-size:1.25em;font-weight:bold;color:var(--pink);white-space:nowrap; }
+.bh-score small{ font-size:.7em; }
+.board-meta{ font-size:.8em;color:#6a8092;margin-bottom:8px; }
+.board-body{ display:flex;flex-direction:column;gap:8px; }
+.tab-empty{ color:#8399a8;font-style:italic;font-size:.9em;padding:6px 0; }
+.tab-section{ display:flex;flex-direction:column;gap:4px; }
+.tab-label{ font-size:.72em;text-transform:uppercase;letter-spacing:.6px;color:#7a8fa0;font-weight:bold; }
+.tab-extra{ text-transform:none;letter-spacing:0;color:#a0b2bf;font-weight:normal; }
+.tab-cards{ display:flex;flex-wrap:wrap;gap:5px; }
+
+/* ===== Pastilles de carte ===== */
+.card-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#f2f7fb;border:1px solid #d6e2ea;border-left:5px solid #9bb3c2;
+  border-radius:9px;padding:4px 8px;font-size:.86em;max-width:100%;
+}
+.card-chip .cc-icon{ font-size:1.05em;flex:none; }
+.card-chip .cc-body{ display:flex;flex-direction:column;line-height:1.15;min-width:0; }
+.card-chip .cc-name{ font-weight:bold;color:#123049;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.card-chip .cc-sub{ font-size:.82em;color:#6a8092; }
+.card-chip .cc-smile{ margin-left:auto;font-size:.8em;font-weight:bold;color:#e08a00;white-space:nowrap; }
+.card-chip.invested{ opacity:.72; }
+/* couleurs par type */
+.c-etude{ border-left-color:#2aa8e6;background:#eaf6fd; }
+.c-metier{ border-left-color:#5b56d6;background:#eeedfb; }
+.c-salaire{ border-left-color:#27ae60;background:#e8f8ee; }
+.c-flirt{ border-left-color:#ec1e79;background:#fdeaf3; }
+.c-mariage{ border-left-color:#d81b60;background:#fce4ec; }
+.c-enfant{ border-left-color:#8e44ad;background:#f4ecfa; }
+.c-acq{ border-left-color:#00897b;background:#e4f5f2; }
+.c-distinction{ border-left-color:#f0a500;background:#fff6de; }
+.c-malus{ border-left-color:#e53935;background:#fdeaea; }
+
+/* ===== Terminal / contrôles (dock en bas) ===== */
+.vsc-term-head{ display:none; } /* la barre d'onglets n'existe qu'en thème VS Code */
+.terminal-dock{ margin-top:6px; }
+.controls{
+  background:rgba(255,255,255,.94);border:2px solid rgba(236,30,121,.25);
+  border-radius:14px;padding:14px 16px;box-shadow:0 6px 18px rgba(0,0,0,.2);
+}
+.vsc-term-body{ display:flex;flex-direction:column;gap:10px; }
+.turn-banner{ font-size:1.15em;font-weight:bold;color:#123049; }
+.deck-row{ display:flex;align-items:center;gap:12px;flex-wrap:wrap; }
+.draw-btn{ font-size:1em; }
+.deck-info{ display:inline-flex;align-items:center;gap:6px;font-size:.9em;color:#3a5568;
+  background:#eef4f8;border-radius:10px;padding:4px 10px; }
+.hand-label{ font-size:.78em;text-transform:uppercase;letter-spacing:.6px;color:#7a8fa0;font-weight:bold; }
+.hand{ display:flex;flex-wrap:wrap;gap:8px;min-height:44px; }
+.hand .card-chip{ font-size:.92em;padding:6px 10px; }
+.hand .card-chip.clickable{ cursor:pointer;transition:transform .08s, box-shadow .08s; }
+.hand .card-chip.clickable:hover{ transform:translateY(-3px);box-shadow:0 6px 12px rgba(0,0,0,.18); }
+.hand .card-chip.selected{ box-shadow:0 0 0 3px var(--yellow), 0 6px 12px rgba(0,0,0,.2);transform:translateY(-3px); }
+
+/* Panneau d'action pour la carte sélectionnée */
+.action-panel:empty{ display:none; }
+.action-inner{
+  background:#fff7fb;border:2px dashed var(--pink);border-radius:12px;padding:10px 12px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.action-head{ font-size:.95em;color:#123049; }
+.action-btns{ display:flex;flex-wrap:wrap;gap:8px;align-items:center; }
+.action-note{ font-size:.82em;color:#b0416b;width:100%; }
+.turn-actions{ display:flex;flex-wrap:wrap;gap:8px; }
+.choice-btn{ font-size:.9em;padding:8px 14px; }
+[data-game="smile-life"] .choice-btn.primary{ background:linear-gradient(180deg,#4fd07a,#27ae60);color:#fff;box-shadow:0 3px 0 #1c7a44,0 6px 10px rgba(0,0,0,.2); }
+[data-game="smile-life"] .choice-btn.danger{ background:linear-gradient(180deg,#ff6b68,#e53935);color:#fff;box-shadow:0 3px 0 #a52521,0 6px 10px rgba(0,0,0,.2); }
+[data-game="smile-life"] .choice-btn.ghost{ background:#eef4f8;color:#3a5568;box-shadow:none;border:1px solid #cfdbe4; }
+
+.log{
+  margin-top:12px;font-size:.85em;color:#3a5568;
+  max-height:120px;overflow-y:auto;
+  background:rgba(255,255,255,.85);border-radius:10px;padding:8px 12px;border:1px solid #dae5ec;
+}
+.log div{ margin-bottom:2px; }
+
+/* ===== Responsive ===== */
+@media (max-width:900px){
+  #game-screen{ flex-direction:column;align-items:stretch; }
+  .sidebar{ width:100%;position:static;flex-direction:row;flex-wrap:wrap; }
+  .scoreboard{ flex:1;min-width:240px;flex-direction:row;flex-wrap:wrap; }
+  .score-row{ flex:1;min-width:180px; }
+}
+@media (max-width:600px){
+  .sidebar{ flex-direction:column; }
+  .scoreboard{ flex-direction:column; }
+  .boards{ grid-template-columns:1fr; }
+  .controls{ padding:12px; }
+  .turn-banner{ font-size:1em; }
+}

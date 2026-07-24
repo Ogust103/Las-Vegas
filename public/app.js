@@ -31,6 +31,7 @@ const $ = id => document.getElementById(id);
 
 const FALLBACK_GAMES = [
   { id: 'las-vegas', name: 'Las Vegas', description: 'Misez vos dés sur les casinos et raflez les plus gros billets.', minPlayers: 2, maxPlayers: 5 },
+  { id: 'smile-life', name: 'Smile Life', description: 'Faites votre vie : études, métier, amour, enfants… posez un max de smiles !', minPlayers: 2, maxPlayers: 5 },
 ];
 let gamesList = FALLBACK_GAMES.slice();
 
@@ -99,7 +100,7 @@ function ensureGameLoaded(gameType) {
   if (!gameType || loadedGameType === gameType) return Promise.resolve();
   if (gameLoading) return gameLoading;
   gameLoading = (async () => {
-    injectCss('/games/' + gameType + '/casino.css');
+    injectCss('/games/' + gameType + '/theme.css');
     injectCss('/games/' + gameType + '/vscode.css');
     const html = await fetch('/games/' + gameType + '/view.html').then(r => r.text());
     $('game-screen').innerHTML = html;

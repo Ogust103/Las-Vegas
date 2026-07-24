@@ -4,8 +4,9 @@ Une petite **plateforme de jeux multijoueurs en ligne** : on choisit un jeu dans
 on crée un salon, et on joue à distance en partageant un lien. Chaque joueur est sur son
 appareil ; l'état est synchronisé en temps réel.
 
-Le premier jeu disponible est **Las Vegas** (jeu de dés). Le dépôt est conçu pour
-**accueillir facilement d'autres jeux** — voir [games/README.md](games/README.md).
+Deux jeux sont disponibles : **Las Vegas** (jeu de dés) et **Smile Life** (jeu de
+cartes « faites votre vie »). Le dépôt est conçu pour **accueillir facilement
+d'autres jeux** — voir [games/README.md](games/README.md).
 
 La logique est **autoritaire côté serveur** (Node + WebSocket) : chaque joueur n'agit que
 pendant son tour, et le serveur valide toutes les actions.
@@ -37,7 +38,7 @@ games/
     engine.js                 Logique serveur (non exposée au navigateur)
     view.html                 Markup de l'écran de jeu
     view.js                   Module de rendu client
-    casino.css                Thème du jeu (mode normal)
+    theme.css                 Thème du jeu (mode normal)
     vscode.css                Rendu du jeu en thème VS Code
 public/
   index.html                  Coquille : menu, accueil, salon, résultats, header
@@ -71,6 +72,22 @@ Le header propose un menu (retour au menu, abandonner, copier le lien, changer d
   rien ; les autres encaissent les billets (du plus gros au plus petit) par ordre
   décroissant de dés.
 - Le plus riche après 4 manches gagne.
+
+### Smile Life — règles (version « cœur jouable »)
+
+- Chacun a **5 cartes en main** (secrètes). À son tour, on **pioche puis on pose
+  une carte** : devant soi (pour marquer des *smiles*), en **malus** sur un autre
+  joueur, ou à la défausse.
+- **Vie pro** : études → métier (selon le niveau d'études) → salaires (selon le
+  métier). **Vie perso** : flirts → mariage → enfants. Plus **acquisitions**
+  (maisons, voyages, animaux) et **distinctions**.
+- On peut **démissionner** (défausser son métier) ou **divorcer** volontairement
+  au lieu de piocher.
+- **Malus** infligés aux autres : accident, maladie, burn-out, licenciement,
+  impôt, divorce, redoublement (certains métiers sont immunisés).
+- Le jeu s'arrête **quand la pioche est vide** ; on compte les smiles posés. Le
+  plus heureux gagne.
+- Écartés de cette première version : cartes spéciales, adultère, prison, attentat.
 
 ## Lancer en local
 

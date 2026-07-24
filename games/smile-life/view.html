@@ -1,0 +1,32 @@
+<!-- Smile Life — fragment de l'écran de jeu, injecté dans #game-screen -->
+<aside class="sidebar">
+  <div class="round-badge" id="roundBadge">Pioche : —</div>
+  <div class="scoreboard" id="scoreboard"></div>
+</aside>
+
+<div class="main-area">
+  <div class="boards" id="boards"></div>
+
+  <div class="terminal-dock">
+    <div class="vsc-term-head" aria-hidden="true">
+      <span class="tt">Problèmes</span>
+      <span class="tt">Sortie</span>
+      <span class="tt">Console de débogage</span>
+      <span class="tt active">Terminal</span>
+      <span class="vsc-term-tools">+ ⌄ ⤢ ✕</span>
+    </div>
+
+    <div class="controls">
+      <div class="vsc-term-body">
+        <div class="turn-banner" id="turnBanner"></div>
+        <div class="deck-row" id="deckRow"></div>
+        <div class="hand-label" id="handLabel">Ta main</div>
+        <div class="hand" id="hand"></div>
+        <div class="action-panel" id="actionPanel"></div>
+        <div class="turn-actions" id="turnActions"></div>
+      </div>
+    </div>
+
+    <div class="log" id="log"></div>
+  </div>
+</div>

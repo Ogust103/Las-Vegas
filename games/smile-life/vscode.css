@@ -1,0 +1,180 @@
+/* ==========================================================================
+   Smile Life — styles du jeu (thème VS Code).
+   Chargé après theme.css quand ce jeu est actif ; s'active sous
+   [data-theme="vscode"]. Utilise les variables --vsc-* de la coquille.
+   - Tableaux des joueurs = zone éditeur sombre (cartes-objets).
+   - Barre latérale = panneau « Assistant IA » à droite.
+   - Main + contrôles + journal = terminal intégré en bas.
+   ========================================================================== */
+
+[data-theme="vscode"] #game-screen{ max-width:none;margin:0;gap:0; }
+
+/* ====== Zone éditeur : les tableaux ====== */
+[data-theme="vscode"] .boards{
+  display:block;grid-template-columns:none;
+  background:#1e1e1e;border:1px solid #3c3c3c;border-radius:4px;
+  margin:0 0 14px;padding:12px;
+}
+[data-theme="vscode"] .main-area{ margin-right:calc(var(--vsc-chat-w) + 16px); }
+[data-theme="vscode"] .board{
+  background:#252526;border:1px solid #3c3c3c;border-top:3px solid var(--pc);
+  border-radius:6px;box-shadow:none;color:#d4d4d4;
+  padding:10px 12px;margin-bottom:10px;
+  font-family:'Consolas','SFMono-Regular','Menlo',monospace;
+}
+[data-theme="vscode"] .board:last-child{ margin-bottom:0; }
+[data-theme="vscode"] .board.active{ box-shadow:0 0 0 1px #4ec1b0; }
+[data-theme="vscode"] .board.me{ background:#2a2d2e; }
+[data-theme="vscode"] .board-head{ margin-bottom:2px; }
+[data-theme="vscode"] .bh-name{ color:#e7e7e7;font-size:1em; }
+[data-theme="vscode"] .bh-score{ color:#4ec9b0; }
+[data-theme="vscode"] .board-meta{ color:#6e7681;font-size:.78em; }
+[data-theme="vscode"] .tab-label{ color:#569cd6; }
+[data-theme="vscode"] .tab-extra{ color:#6a9955; }
+[data-theme="vscode"] .tab-empty{ color:#6e7681; }
+[data-theme="vscode"] .card-chip{
+  background:#1e1e1e;border:1px solid #3c3c3c;border-left:3px solid #6e7681;
+  color:#d4d4d4;border-radius:4px;font-size:.82em;
+}
+[data-theme="vscode"] .card-chip .cc-name{ color:#dcdcaa; }
+[data-theme="vscode"] .card-chip .cc-sub{ color:#6a9955; }
+[data-theme="vscode"] .card-chip .cc-smile{ color:#ce9178; }
+[data-theme="vscode"] .c-etude{ border-left-color:#569cd6; }
+[data-theme="vscode"] .c-metier{ border-left-color:#c586c0; }
+[data-theme="vscode"] .c-salaire{ border-left-color:#6a9955; }
+[data-theme="vscode"] .c-flirt{ border-left-color:#ec1e79; }
+[data-theme="vscode"] .c-mariage{ border-left-color:#d16d9e; }
+[data-theme="vscode"] .c-enfant{ border-left-color:#b180d7; }
+[data-theme="vscode"] .c-acq{ border-left-color:#4ec9b0; }
+[data-theme="vscode"] .c-distinction{ border-left-color:#dcdcaa; }
+[data-theme="vscode"] .c-malus{ border-left-color:#f14c4c; }
+
+/* ====== Barre latérale = panneau de chat IA à droite ====== */
+[data-theme="vscode"] .sidebar{
+  position:fixed;right:0;
+  top:calc(var(--vsc-titlebar-h) + var(--vsc-tabs-h));
+  bottom:var(--vsc-status-h);width:var(--vsc-chat-w);z-index:40;
+  background:#1e1e1e;border-left:1px solid #3c3c3c;
+  display:flex;flex-direction:column;gap:0;padding:0;margin:0;
+}
+[data-theme="vscode"] .sidebar::before{
+  content:"✦  Assistant IA";
+  flex:none;padding:11px 14px;font-size:13px;font-weight:600;color:#e7e7e7;
+  background:#252526;border-bottom:1px solid #3c3c3c;
+}
+[data-theme="vscode"] .sidebar::after{
+  content:"Poser une question à l'IA…  ➤";
+  flex:none;margin:8px 12px 12px;padding:10px 12px;
+  border:1px solid #3c3c3c;border-radius:8px;color:#6b6b6b;background:#252526;font-size:12.5px;
+}
+[data-theme="vscode"] .round-badge{
+  flex:none;align-self:center;margin:10px 0 2px;
+  background:none;border:none;color:#858585;font-size:11px;padding:0;letter-spacing:1px;box-shadow:none;
+}
+[data-theme="vscode"] .round-badge b{ color:#cccccc; }
+[data-theme="vscode"] .scoreboard{
+  flex:1;overflow:auto;background:none;border:none;border-radius:0;box-shadow:none;
+  padding:10px 12px;gap:10px;
+}
+[data-theme="vscode"] .scoreboard::before{
+  content:"✦  Classement en direct des joueurs 👇";
+  display:block;color:#cccccc;font-size:12.5px;line-height:1.5;
+  padding:6px 8px 10px;margin-bottom:2px;border-bottom:1px solid #2d2d2d;
+}
+[data-theme="vscode"] .score-row{
+  background:none;border:none;border-radius:6px;padding:6px 8px;transform:none;box-shadow:none;
+}
+[data-theme="vscode"] .score-row:hover{ background:rgba(255,255,255,.03); }
+[data-theme="vscode"] .score-row.active{ background:rgba(78,193,176,.08); }
+[data-theme="vscode"] .score-name{ color:#e7e7e7;font-size:13px; }
+[data-theme="vscode"] .score-name .dot{ width:9px;height:9px; }
+[data-theme="vscode"] .score-money{ color:#4ec9b0;font-size:13px; }
+[data-theme="vscode"] .score-msg{ color:#cccccc;font-size:12px; }
+
+/* ====== Terminal intégré en bas (main + contrôles + journal) ====== */
+[data-theme="vscode"] body{ padding-bottom:calc(var(--vsc-status-h) + var(--vsc-term-h) + 16px); }
+[data-theme="vscode"] .terminal-dock{
+  position:fixed;z-index:45;
+  left:calc(var(--vsc-activity-w) + var(--vsc-sidebar-w));
+  right:var(--vsc-chat-w);
+  bottom:var(--vsc-status-h);height:var(--vsc-term-h);
+  background:#181818;border-top:1px solid #3c3c3c;margin:0;
+  display:flex;flex-direction:column;
+  font-family:'Consolas','SFMono-Regular','Menlo',monospace;
+}
+[data-theme="vscode"] .vsc-term-head{ order:0; }
+[data-theme="vscode"] .controls{ order:1; }
+[data-theme="vscode"] .log{ order:2; }
+[data-theme="vscode"] .vsc-term-head{
+  display:flex;align-items:center;gap:20px;flex:none;
+  height:32px;padding:0 14px;background:#1e1e1e;border-bottom:1px solid #2d2d2d;
+  font-size:11px;letter-spacing:.4px;color:#969696;text-transform:uppercase;
+}
+[data-theme="vscode"] .vsc-term-head .tt{ height:32px;display:flex;align-items:center;border-bottom:1px solid transparent; }
+[data-theme="vscode"] .vsc-term-head .tt.active{ color:#e7e7e7;border-bottom-color:#e7e7e7; }
+[data-theme="vscode"] .vsc-term-head .vsc-term-tools{ margin-left:auto;color:#9d9d9d;letter-spacing:3px; }
+[data-theme="vscode"] .controls{
+  flex:1;min-height:0;overflow:auto;
+  background:#1e1e1e;border:none;border-radius:0;box-shadow:none;
+  padding:0;margin:0;
+}
+[data-theme="vscode"] .vsc-term-body{
+  padding:12px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:9px;
+  color:#cccccc;font-size:13px;
+}
+[data-theme="vscode"] .turn-banner{ margin:0;font-weight:normal;color:#cccccc;font-size:13px; }
+[data-theme="vscode"] .turn-banner::before{ content:">>> ";color:#6a9955; }
+[data-theme="vscode"] .deck-row{ gap:10px; }
+[data-theme="vscode"] .deck-info{ background:#252526;color:#9cdcfe;border:1px solid #3c3c3c;font-size:12px; }
+[data-theme="vscode"] .deck-info b{ color:#b5cea8; }
+[data-theme="vscode"] .hand-label,
+[data-theme="vscode"] .tab-label{ font-size:11px; }
+[data-theme="vscode"] .hand-label{ color:#569cd6; }
+[data-theme="vscode"] .hand{ gap:7px;min-height:0; }
+[data-theme="vscode"] .hand .card-chip{ background:#252526;font-size:12px; }
+[data-theme="vscode"] .hand .card-chip.clickable:hover{ transform:none;box-shadow:0 0 0 1px #4ec1b0; }
+[data-theme="vscode"] .hand .card-chip.selected{ transform:none;box-shadow:0 0 0 2px #dcdcaa; }
+/* bouton piocher = commande REPL */
+[data-theme="vscode"] .draw-btn{
+  background:none;border:none;box-shadow:none;padding:0;margin:0;font-family:inherit;font-size:0;cursor:pointer;
+}
+[data-theme="vscode"] .draw-btn::before{ content:">>> pioche()";font-size:13px;color:#dcdcaa; }
+[data-theme="vscode"] .draw-btn:hover::before{ color:#fff;text-decoration:underline; }
+/* panneau d'action + choix = boutons de terminal sobres */
+[data-theme="vscode"] .action-inner{ background:#252526;border:1px solid #3c3c3c;border-radius:4px; }
+[data-theme="vscode"] .action-head{ color:#cccccc;font-size:12.5px; }
+[data-theme="vscode"] .action-note{ color:#f14c4c;font-size:11.5px; }
+[data-theme="vscode"] .choice-btn,
+[data-theme="vscode"] [data-game="smile-life"] .choice-btn{
+  background:#252526;border:1px solid #3c3c3c;color:#cccccc;border-radius:4px;
+  font-family:inherit;font-size:12px;box-shadow:none;min-width:0;padding:6px 12px;
+}
+[data-theme="vscode"] .choice-btn:hover:not(:disabled){ background:#2d2d2d;color:#fff; }
+[data-theme="vscode"] .choice-btn.primary{ border-color:#4ec1b0;color:#4ec9b0; }
+[data-theme="vscode"] .choice-btn.danger{ border-color:#f14c4c;color:#f14c4c; }
+[data-theme="vscode"] .choice-btn:disabled{ opacity:.4; }
+/* journal = sortie du terminal */
+[data-theme="vscode"] .log{
+  flex:none;height:34%;min-height:80px;overflow-y:auto;
+  display:flex;flex-direction:column-reverse;
+  background:none;border:none;border-top:1px solid #2d2d2d;border-radius:0;
+  margin:0;max-width:none;
+  padding:10px 16px;font-family:inherit;font-size:12.5px;line-height:1.55;color:#cccccc;
+}
+[data-theme="vscode"] .log div{ margin:0; }
+
+/* ====== Mobile : chat et terminal repassent dans le flux ====== */
+@media (max-width:760px){
+  [data-theme="vscode"] body{ padding-bottom:calc(var(--vsc-status-h) + 12px); }
+  [data-theme="vscode"] .sidebar{ position:static;width:100%;border-left:none;top:auto;bottom:auto; }
+  [data-theme="vscode"] .sidebar::before,
+  [data-theme="vscode"] .sidebar::after{ display:none; }
+  [data-theme="vscode"] .scoreboard{ flex-direction:column;overflow:visible; }
+  [data-theme="vscode"] .main-area{ margin-right:0; }
+  [data-theme="vscode"] .terminal-dock{
+    position:static;left:auto;right:auto;bottom:auto;height:auto;
+    border:1px solid #3c3c3c;border-radius:4px;margin-top:14px;
+  }
+  [data-theme="vscode"] .controls{ flex:none; }
+  [data-theme="vscode"] .log{ height:auto;max-height:200px; }
+}

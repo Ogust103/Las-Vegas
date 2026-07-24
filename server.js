@@ -11,6 +11,7 @@ const { WebSocketServer } = require('ws');
 const GAMES = {};
 function registerGame(engine) { GAMES[engine.id] = engine; }
 registerGame(require('./games/las-vegas/engine'));
+registerGame(require('./games/smile-life/engine'));
 
 const DEFAULT_GAME = 'las-vegas';
 function resolveGameType(type) { return GAMES[type] ? type : DEFAULT_GAME; }
@@ -119,8 +120,14 @@ function sanitizeName(name) {
   return n || 'Joueur';
 }
 
+// envoie un message d'erreur ciblé à un joueur (feedback d'action illégale)
+function sendError(room, clientId, message) {
+  const p = playerById(room, clientId);
+  if (p && p.ws) sendTo(p.ws, { type: 'error', message });
+}
+
 // contexte fourni aux moteurs de jeu
-const ctx = { escapeHtml, playerById, colorOf, dot, addLog, broadcast };
+const ctx = { escapeHtml, playerById, colorOf, dot, addLog, broadcast, sendError };
 
 // ---------- Sérialisation envoyée aux clients ----------
 function publicPlayers(room) {
@@ -158,9 +165,18 @@ function buildState(room) {
 }
 
 function broadcast(room) {
-  const payload = JSON.stringify(buildState(room));
+  const base = buildState(room);
+  const engine = engineOf(room);
+  // Certains jeux (cartes en main secrètes) diffusent une vue privée par joueur.
+  const hasPrivate = engine && typeof engine.privateState === 'function';
+  const sharedPayload = hasPrivate ? null : JSON.stringify(base);
   room.players.forEach(p => {
     if (p.connected && p.ws && p.ws.readyState === 1) {
+      let payload = sharedPayload;
+      if (hasPrivate) {
+        const priv = engine.privateState(room, p.clientId, ctx) || {};
+        payload = JSON.stringify(Object.assign({}, base, priv));
+      }
       try { p.ws.send(payload); } catch (e) { /* ignore */ }
     }
   });

@@ -1,6 +1,6 @@
 /* ==========================================================================
    Las Vegas — styles du jeu (thème VS Code).
-   Chargé après casino.css quand ce jeu est actif ; s'active sous
+   Chargé après theme.css quand ce jeu est actif ; s'active sous
    [data-theme="vscode"]. Utilise les variables --vsc-* définies par la coquille.
    ========================================================================== */
 
